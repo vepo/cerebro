@@ -120,4 +120,7 @@ TEST_CASE("Spliting dataset")
 
     CHECK_EQ(x.cell(2, 0), "3");
     CHECK_EQ(x.cell(2, 1), "Bob");
+
+    CHECK_EQ(x.cell(1, "ID"), "2");
+    CHECK_EQ(x.cell(1, "NAME"), "Alice");
 }
