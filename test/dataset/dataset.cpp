@@ -7,7 +7,6 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV")
     {
         Dataset dataset = Dataset("./test/dataset/simple.csv");
-        CHECK_EQ(dataset.path, "./test/dataset/simple.csv");
         CHECK_EQ(dataset.names, vector<string>({"ID", "NAME", "AGE"}));
         CHECK_EQ(dataset.cols, 3);
         CHECK_EQ(dataset.rows, 3);
@@ -103,4 +102,22 @@ TEST_CASE("Reading dataset")
         CHECK_EQ(dataset.cell(2, 1), "Bob");
         CHECK_EQ(dataset.cell(2, 2), "75");
     }
+}
+
+TEST_CASE("Spliting dataset")
+{
+    Dataset dataset = Dataset("./test/dataset/simple.csv");
+    Dataset x = dataset.split(vector<string>({"ID", "NAME"}));
+    CHECK_EQ(x.names, vector<string>({"ID", "NAME"}));
+    CHECK_EQ(x.cols, 2);
+    CHECK_EQ(x.rows, 3);
+
+    CHECK_EQ(x.cell(0, 0), "1");
+    CHECK_EQ(x.cell(0, 1), "Joe");
+
+    CHECK_EQ(x.cell(1, 0), "2");
+    CHECK_EQ(x.cell(1, 1), "Alice");
+
+    CHECK_EQ(x.cell(2, 0), "3");
+    CHECK_EQ(x.cell(2, 1), "Bob");
 }

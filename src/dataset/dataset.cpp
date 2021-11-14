@@ -10,7 +10,6 @@
 
 Dataset::Dataset(string path)
 {
-    this->path = path;
     this->cols = this->rows = 0;
     CSVReader reader(path);
 
@@ -24,7 +23,7 @@ Dataset::Dataset(string path)
         }
         else
         {
-            if (counter + 1 > (int)this->contents.size())
+            if (reader.endOfLine())
             {
                 this->contents.push_back(vector<string>());
             }
@@ -37,8 +36,14 @@ Dataset::Dataset(string path)
         }
     }
     this->rows = counter - 1;
-    //DEBUG("Cols: " << this->cols)
-    //DEBUG("Rows: " << this->rows)
+}
+
+Dataset::Dataset(vector<string> names, vector<vector<string>> contents)
+{
+    this->names = names;
+    this->contents = contents;
+    this->cols = names.size();
+    this->rows = contents.size();
 }
 
 string Dataset::cell(int row, int col)
@@ -70,4 +75,39 @@ string Dataset::cell(int row, string colName)
     {
         return "";
     }
+}
+
+Dataset Dataset::split(vector<string> columnNames)
+{
+    vector<int> columns;
+    for (auto columnName : columnNames)
+    {
+        int index = this->colIndex(columnName);
+        if (index >= 0)
+        {
+            columns.push_back(index);
+        }
+    }
+    return this->split(columns);
+}
+
+Dataset Dataset::split(vector<int> colums)
+{
+    vector<string> columnNames;
+    vector<vector<string>> contents;
+    for (size_t row = 0; row < this->contents.size(); ++row)
+    {
+        contents.push_back(vector<string>());
+    }
+
+    for (auto index : colums)
+    {
+        columnNames.push_back(this->names[index]);
+        for (size_t row = 0; row < this->contents.size(); ++row)
+        {
+            contents[row].push_back(this->contents[row][index]);
+        }
+    }
+    Dataset inner(columnNames, contents);
+    return inner;
 }

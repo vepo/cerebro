@@ -15,9 +15,11 @@ public:
 
     int cols;
     int rows;
-    string path;
     vector<string> names;
+    Dataset split(vector<string> columnNames);
+    Dataset split(vector<int> colums);
 
 private:
+    Dataset(vector<string> names,vector<vector<string>> contents);
     vector<vector<string>> contents;
 };
