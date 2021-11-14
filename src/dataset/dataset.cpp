@@ -1,43 +1,44 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <regex>
+#include "utils/string-utils.hpp"
 
 #include "dataset/dataset.hpp"
+#include "utils/csv-reader.hpp"
+#include "utils/debug.hpp"
 
 Dataset::Dataset(string path)
 {
     this->path = path;
     this->cols = this->rows = 0;
-    ifstream input_file(path);
-    if (!input_file.is_open())
-    {
-        exit(EXIT_FAILURE);
-    }
+    CSVReader reader(path);
+
     int counter = 0;
-    string record;
-    while (getline(input_file, record))
+    while (reader.hasNextToken())
     {
-        istringstream line(record);
-        while (getline(line, record, ','))
+        if (!counter)
         {
-            if (!counter)
-            {
-                this->names.push_back(record);
-                this->cols++;
-            }
-            else
-            {
-                if (counter + 1 > (int)this->contents.size())
-                {
-                    this->contents.push_back(vector<string>());
-                }
-                this->contents[counter - 1].push_back(record);
-            }
+            this->names.push_back(reader.nextToken());
+            this->cols++;
         }
-        counter += 1;
+        else
+        {
+            if (counter + 1 > (int)this->contents.size())
+            {
+                this->contents.push_back(vector<string>());
+            }
+            this->contents[counter - 1].push_back(reader.nextToken());
+        }
+
+        if (reader.endOfLine())
+        {
+            counter++;
+        }
     }
     this->rows = counter - 1;
-    input_file.close();
+    //DEBUG("Cols: " << this->cols)
+    //DEBUG("Rows: " << this->rows)
 }
 
 string Dataset::cell(int row, int col)

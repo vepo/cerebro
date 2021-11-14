@@ -1,5 +1,4 @@
 CXX             := -c++
-CXXFLAGS        := -pedantic-errors -Wall -Wextra -Werror
 LDFLAGS         := -L/usr/lib -lstdc++ -lm
 BUILD           := ./build
 OBJ_DIR         := $(BUILD)/objects
@@ -53,10 +52,12 @@ test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 	$(CXX) $(CXXFLAGS) $(DOCTEST_INCLUDE) $(INCLUDE) $(TESTS) $(OBJECTS) -o $(BUILD)/tests $(LDFLAGS)
 	$(BUILD)/tests
 
+clean-doctest:
+	-@rm -rvf $(DOCTEST_DIR)
+
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
-	-@rm -rvf $(DOCTEST_DIR)
 
 info:
 	@echo "[*] Application dir: ${APP_DIR}     "
