@@ -9,7 +9,7 @@
 class Dataset
 {
 public:
-    Dataset(std::string path);
+    Dataset(std::string const &path);
     std::string cell(int row, int col);
     std::string cell(int row, std::string colName);
     int colIndex(std::string colName);

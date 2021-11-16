@@ -8,7 +8,7 @@
 #include "utils/csv-reader.hpp"
 #include "utils/debug.hpp"
 
-Dataset::Dataset(std::string path)
+Dataset::Dataset(std::string const &path)
 {
     this->cols = this->rows = 0;
     CSVReader reader(path);
@@ -18,16 +18,16 @@ Dataset::Dataset(std::string path)
     {
         if (!counter)
         {
-            this->names.push_back(reader.nextToken());
+            this->names.emplace_back(reader.nextToken());
             this->cols++;
         }
         else
         {
             if (reader.endOfLine())
             {
-                this->contents.push_back(std::vector<std::string>());
+                this->contents.emplace_back(std::vector<std::string>());
             }
-            this->contents[counter - 1].push_back(reader.nextToken());
+            this->contents[counter - 1].emplace_back(reader.nextToken());
         }
 
         if (reader.endOfLine())
@@ -86,7 +86,7 @@ Dataset Dataset::split(std::vector<std::string> columnNames)
         int index = this->colIndex(columnName);
         if (index >= 0)
         {
-            columns.push_back(index);
+            columns.emplace_back(index);
         }
     }
     return this->split(columns);
@@ -98,15 +98,15 @@ Dataset Dataset::split(std::vector<int> colums)
     std::vector<std::vector<std::string>> contents;
     for (size_t row = 0; row < this->contents.size(); ++row)
     {
-        contents.push_back(std::vector<std::string>());
+        contents.emplace_back(std::vector<std::string>());
     }
 
     for (auto index : colums)
     {
-        columnNames.push_back(this->names[index]);
+        columnNames.emplace_back(this->names[index]);
         for (size_t row = 0; row < this->contents.size(); ++row)
         {
-            contents[row].push_back(this->contents[row][index]);
+            contents[row].emplace_back(this->contents[row][index]);
         }
     }
     Dataset inner(columnNames, contents);
@@ -121,7 +121,7 @@ Pair<Dataset> Dataset::split(double ratio)
         int selectedIndex = rand() % this->contents.size();
         if (std::find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
         {
-            indexes.push_back(selectedIndex);
+            indexes.emplace_back(selectedIndex);
         }
     }
 
@@ -131,11 +131,11 @@ Pair<Dataset> Dataset::split(double ratio)
     {
         if (std::find(indexes.begin(), indexes.end(), i) == indexes.end())
         {
-            firstContents.push_back(this->contents[i]);
+            firstContents.emplace_back(this->contents[i]);
         }
         else
         {
-            secondContents.push_back(this->contents[i]);
+            secondContents.emplace_back(this->contents[i]);
         }
     }
 
