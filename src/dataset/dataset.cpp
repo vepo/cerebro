@@ -111,3 +111,39 @@ Dataset Dataset::split(vector<int> colums)
     Dataset inner(columnNames, contents);
     return inner;
 }
+
+Pair<Dataset> Dataset::split(double ratio)
+{
+    vector<int> indexes;
+    while (indexes.size() < (int)(this->contents.size() * ratio))
+    {
+        int selectedIndex = rand() % this->contents.size();
+        if (find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
+        {
+            indexes.push_back(selectedIndex);
+        }
+    }
+
+    vector<vector<string>> firstContents;
+    vector<vector<string>> secondContents;
+    for (int i = 0; i < this->contents.size(); ++i)
+    {
+        if (find(indexes.begin(), indexes.end(), i) == indexes.end())
+        {
+            firstContents.push_back(this->contents[i]);
+        }
+        else
+        {
+            secondContents.push_back(this->contents[i]);
+        }
+    }
+
+    return Pair<Dataset>(Dataset(this->names, firstContents),
+                         Dataset(this->names, secondContents));
+}
+
+NormalizedDataset Dataset::normalize()
+{
+    NormalizedDataset nd(this->names, this->contents);
+    return nd;
+}

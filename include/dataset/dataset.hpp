@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+#include "dataset/normalized-dataset.hpp"
+#include "utils/pair.hpp"
+
 using namespace std;
 
 class Dataset
@@ -18,8 +21,10 @@ public:
     vector<string> names;
     Dataset split(vector<string> columnNames);
     Dataset split(vector<int> colums);
+    Pair<Dataset> split(double ratio);
+    NormalizedDataset normalize();
 
 private:
-    Dataset(vector<string> names,vector<vector<string>> contents);
+    Dataset(vector<string> names, vector<vector<string>> contents);
     vector<vector<string>> contents;
 };
