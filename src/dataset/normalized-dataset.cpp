@@ -26,7 +26,7 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
     std::vector<DataType> types;
     for (int column = 0; column < names.size(); column++)
     {
-        DataType supposedType = INTEGER;
+        DataType supposedType = DataType::INTEGER;
         std::cout << "Column: " << column << std::endl;
         std::set<std::string> uniqueValues;
         for (int row = 0; row < contents.size(); row++)
@@ -34,20 +34,20 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
             if (contents[row][column].size() > 0)
             {
                 uniqueValues.insert(contents[row][column]);
-                if (supposedType == INTEGER &&
+                if (supposedType == DataType::INTEGER &&
                     regex_match(contents[row][column], integerPattern))
                 {
                     std::cout << "Integer found: " << contents[row][column] << std::endl;
                 }
-                else if ((supposedType == INTEGER || supposedType == FLOATING_POINT) &&
+                else if ((supposedType == DataType::INTEGER || supposedType == DataType::FLOATING_POINT) &&
                          regex_match(contents[row][column], floatingPointPattern))
                 {
-                    supposedType = FLOATING_POINT;
+                    supposedType = DataType::FLOATING_POINT;
                     std::cout << "Floating Point found: " << contents[row][column] << std::endl;
                 }
                 else if (regex_match(contents[row][column], enumPattern))
                 {
-                    supposedType = ENUM;
+                    supposedType = DataType::ENUM;
                     std::cout << "Enum found: " << contents[row][column] << std::endl;
                 }
                 else
@@ -59,7 +59,7 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
 
         switch (supposedType)
         {
-        case INTEGER:
+        case DataType::INTEGER:
             this->contents.emplace_back(normalizeInteger(contents, column));
         }
     }
@@ -91,7 +91,7 @@ DataType NormalizedDataset::type(std::string colName)
     }
     else
     {
-        return INTEGER;
+        return DataType::INTEGER;
     }
 }
 

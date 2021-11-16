@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-enum DataType
+enum class DataType
 {
     STRING = 1,
     INTEGER = 2,
