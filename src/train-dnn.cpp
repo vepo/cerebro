@@ -4,15 +4,13 @@
 #include "dataset/dataset.hpp"
 #include "nn/multi-layer-perceptron-trainer.hpp"
 
-using namespace std;
-
 int main(int argc, char *argv[])
 {
-    string outpuFile;
-    string datasetFile;
-    vector<string> inputNames;
-    vector<string> outputNames;
-    vector<int> layers;
+    std::string outpuFile;
+    std::string datasetFile;
+    std::vector<std::string> inputNames;
+    std::vector<std::string> outputNames;
+    std::vector<int> layers;
 
     for (size_t index = 0; index < argc; ++index)
     {
@@ -75,7 +73,8 @@ int main(int argc, char *argv[])
     Dataset dataset(datasetFile);
     MultiLayerPerceptronTrainerParams params(&dataset,
                                              inputNames,
-                                             outputNames);
-    cout << "Training House Predictor..." << endl;
+                                             outputNames,
+                                             layers);
+    std::cout << "Training House Predictor..." << std::endl;
     return 0;
 }

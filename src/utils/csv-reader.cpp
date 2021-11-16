@@ -2,15 +2,15 @@
 #include "utils/debug.hpp"
 #include "utils/string-utils.hpp"
 
-regex CSVReader::lineRegex("^.*\\r*[$\\n]?");
-regex CSVReader::cellRegex("^([^,\\n]*)\\r*([$,\\n]?)");
-regex CSVReader::lineEscapedRegex("^\\s*\"(?:\"{2}|.|\n|\r)*\".*[$\\n]?");
-regex CSVReader::cellEscapedRegex("^\\s*\"((?:\"{2}|.|\n|\r)*)\"([,$\\n]?)");
+std::regex CSVReader::lineRegex("^.*\\r*[$\\n]?");
+std::regex CSVReader::cellRegex("^([^,\\n]*)\\r*([$,\\n]?)");
+std::regex CSVReader::lineEscapedRegex("^\\s*\"(?:\"{2}|.|\n|\r)*\".*[$\\n]?");
+std::regex CSVReader::cellEscapedRegex("^\\s*\"((?:\"{2}|.|\n|\r)*)\"([,$\\n]?)");
 
-CSVReader::CSVReader(string path)
+CSVReader::CSVReader(std::string path)
 {
-    this->input = new ifstream(path, ios::in);
-    this->match = new smatch();
+    this->input = new std::ifstream(path, std::ios::in);
+    this->match = new std::smatch();
 }
 
 CSVReader::~CSVReader()
@@ -19,20 +19,20 @@ CSVReader::~CSVReader()
     delete this->match;
 }
 
-string CSVReader::process_line(smatch lineMatch)
+std::string CSVReader::process_line(std::smatch lineMatch)
 {
-    smatch cellMatch;
-    string line = lineMatch.str();
-    if (regex_search(line, cellMatch, cellEscapedRegex))
+    std::smatch cellMatch;
+    std::string line = lineMatch.str();
+    if (std::regex_search(line, cellMatch, cellEscapedRegex))
     {
-        string cell = StringUtils::trim(StringUtils::replaceAll(cellMatch[1].str(), "\"\"", "\""));
+        std::string cell = StringUtils::trim(StringUtils::replaceAll(cellMatch[1].str(), "\"\"", "\""));
         this->buffer.erase(0, cellMatch.length());
         this->eol = cellMatch[2] != ",";
         return cell;
     }
-    else if (regex_search(line, cellMatch, cellRegex))
+    else if (std::regex_search(line, cellMatch, cellRegex))
     {
-        string cell = cellMatch[1].str();
+        std::string cell = cellMatch[1].str();
         this->buffer.erase(0, cellMatch.length());
         this->eol = cellMatch[2] != ",";
         return StringUtils::trim(cell);
@@ -40,7 +40,7 @@ string CSVReader::process_line(smatch lineMatch)
     return "";
 }
 
-string CSVReader::nextToken()
+std::string CSVReader::nextToken()
 {
     if (this->input->is_open())
     {
@@ -54,12 +54,12 @@ string CSVReader::nextToken()
         }
     }
 
-    smatch lineMatch;
-    if (regex_search(this->buffer, lineMatch, lineEscapedRegex))
+    std::smatch lineMatch;
+    if (std::regex_search(this->buffer, lineMatch, lineEscapedRegex))
     {
         return process_line(lineMatch);
     }
-    else if (regex_search(this->buffer, lineMatch, lineRegex))
+    else if (std::regex_search(this->buffer, lineMatch, lineRegex))
     {
         return process_line(lineMatch);
     }
@@ -73,6 +73,6 @@ bool CSVReader::endOfLine()
 
 bool CSVReader::hasNextToken()
 {
-    return (!this->buffer.empty() && regex_search(this->buffer, cellRegex)) ||
+    return (!this->buffer.empty() && std::regex_search(this->buffer, cellRegex)) ||
            (this->input->is_open() && this->input->peek() != EOF);
 }

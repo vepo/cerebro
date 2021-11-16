@@ -4,26 +4,24 @@
 #include <fstream>
 #include <regex>
 
-using namespace std;
-
 class CSVReader
 {
 public:
-    CSVReader(string path);
+    CSVReader(std::string path);
     ~CSVReader();
-    string nextToken();
+    std::string nextToken();
     bool hasNextToken();
     bool endOfLine();
 
-    static regex lineRegex;
-    static regex cellRegex;
-    static regex lineEscapedRegex;
-    static regex cellEscapedRegex;
+    static std::regex lineRegex;
+    static std::regex cellRegex;
+    static std::regex lineEscapedRegex;
+    static std::regex cellEscapedRegex;
 
 private:
-    string process_line(smatch lineMatch);
+    std::string process_line(std::smatch lineMatch);
     bool eol;
-    ifstream *input;
-    smatch *match;
-    string buffer;
+    std::ifstream *input;
+    std::smatch *match;
+    std::string buffer;
 };

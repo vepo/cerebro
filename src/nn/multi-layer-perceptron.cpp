@@ -1,6 +1,8 @@
 #include "nn/multi-layer-perceptron.hpp"
 
-MultiLayerPerceptron::MultiLayerPerceptron(vector<int> layers, double bias, double eta)
+MultiLayerPerceptron::MultiLayerPerceptron(std::vector<int> layers,
+                                           double bias,
+                                           double eta)
 {
     this->layers = layers;
     this->bias = bias;
@@ -8,9 +10,9 @@ MultiLayerPerceptron::MultiLayerPerceptron(vector<int> layers, double bias, doub
 
     for (size_t i = 0; i < layers.size(); ++i)
     {
-        values.push_back(vector<double>(layers[i], 0.0));
-        d.push_back(vector<double>(layers[i], 0.0));
-        network.push_back(vector<Perceptron>());
+        values.push_back(std::vector<double>(layers[i], 0.0));
+        d.push_back(std::vector<double>(layers[i], 0.0));
+        network.push_back(std::vector<Perceptron>());
         if (i > 0)
         {
             for (int j = 0; j < layers[i]; ++j)
@@ -21,7 +23,7 @@ MultiLayerPerceptron::MultiLayerPerceptron(vector<int> layers, double bias, doub
     }
 }
 
-void MultiLayerPerceptron::set_weights(vector<vector<vector<double>>> w_init)
+void MultiLayerPerceptron::set_weights(std::vector<std::vector<std::vector<double>>> w_init)
 {
     for (size_t i = 0; i < w_init.size(); ++i)
     {
@@ -34,23 +36,23 @@ void MultiLayerPerceptron::set_weights(vector<vector<vector<double>>> w_init)
 
 void MultiLayerPerceptron::print_weights()
 {
-    cout << endl;
+    std::cout << std::endl;
     for (size_t i = 1; i < network.size(); ++i)
     {
         for (int j = 0; j < layers[i]; ++j)
         {
-            cout << "Layer " << i + 1 << " Neuron " << j << ": ";
+            std::cout << "Layer " << i + 1 << " Neuron " << j << ": ";
             for (auto &it : network[i][j].weights)
             {
-                cout << it << "\t";
+                std::cout << it << "\t";
             }
-            cout << endl;
+            std::cout << std::endl;
         }
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
-vector<double> MultiLayerPerceptron::run(vector<double> x)
+std::vector<double> MultiLayerPerceptron::run(std::vector<double> x)
 {
     values[0] = x;
     for (size_t i = 1; i < network.size(); ++i)
@@ -64,14 +66,14 @@ vector<double> MultiLayerPerceptron::run(vector<double> x)
 }
 
 // Run a single (x,y) pair with the backpropagation algorithm.
-double MultiLayerPerceptron::bp(vector<double> x, vector<double> y)
+double MultiLayerPerceptron::bp(std::vector<double> x, std::vector<double> y)
 {
     // Backpropagation steps
     // STEP 1: Feed a sample to the network
-    vector<double> output = run(x);
+    std::vector<double> output = run(x);
 
     // STEP 2: Calculate the MSE
-    vector<double> error;
+    std::vector<double> error;
     double MSE = 0.0;
     for (size_t i = 0; i < y.size(); ++i)
     {

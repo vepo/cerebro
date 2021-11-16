@@ -3,10 +3,9 @@
 #include <string>
 #include <regex>
 
-using namespace std;
 class StringUtils
 {
 public:
-    static string trim(string value);
-    static string replaceAll(string value, string pattern, string replacement);
+    static std::string trim(std::string value);
+    static std::string replaceAll(std::string value, std::string pattern, std::string replacement);
 };

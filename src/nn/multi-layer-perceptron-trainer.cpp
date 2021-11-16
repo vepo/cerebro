@@ -3,9 +3,9 @@
 #include <iostream>
 
 MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(Dataset *dataset,
-                                                                     vector<string> xNames,
-                                                                     vector<string> yNames,
-                                                                     vector<int> layers,
+                                                                     std::vector<std::string> xNames,
+                                                                     std::vector<std::string> yNames,
+                                                                     std::vector<int> layers,
                                                                      double testSize,
                                                                      double validationSize)
 {
@@ -25,7 +25,7 @@ MultiLayerPerceptronTrainer::MultiLayerPerceptronTrainer(MultiLayerPerceptronTra
 void MultiLayerPerceptronTrainer::run()
 {
     MultiLayerPerceptron mlp = MultiLayerPerceptron(this->params->layers);
-    cout << "Training Neural Network..." << endl;
+    std::cout << "Training Neural Network..." << std::endl;
     //this->params->dataset->normalize();
     this->params->dataset->split(this->params->testSize);
     double MSE;
@@ -39,13 +39,13 @@ void MultiLayerPerceptronTrainer::run()
         MSE = MSE / 4.0;
         if (i % 100 == 0)
         {
-            cout << "MSE = " << MSE << endl;
+            std::cout << "MSE = " << MSE << std::endl;
         }
     }
-    cout << endl
-         << endl
-         << "Trained weights (Compare to hard-coded weights):"
-         << endl
-         << endl;
+    std::cout << std::endl
+              << std::endl
+              << "Trained weights (Compare to hard-coded weights):"
+              << std::endl
+              << std::endl;
     mlp.print_weights();
 }

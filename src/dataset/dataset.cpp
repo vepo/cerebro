@@ -8,7 +8,7 @@
 #include "utils/csv-reader.hpp"
 #include "utils/debug.hpp"
 
-Dataset::Dataset(string path)
+Dataset::Dataset(std::string path)
 {
     this->cols = this->rows = 0;
     CSVReader reader(path);
@@ -25,7 +25,7 @@ Dataset::Dataset(string path)
         {
             if (reader.endOfLine())
             {
-                this->contents.push_back(vector<string>());
+                this->contents.push_back(std::vector<std::string>());
             }
             this->contents[counter - 1].push_back(reader.nextToken());
         }
@@ -38,7 +38,8 @@ Dataset::Dataset(string path)
     this->rows = counter - 1;
 }
 
-Dataset::Dataset(vector<string> names, vector<vector<string>> contents)
+Dataset::Dataset(std::vector<std::string> names,
+                 std::vector<std::vector<std::string>> contents)
 {
     this->names = names;
     this->contents = contents;
@@ -46,14 +47,14 @@ Dataset::Dataset(vector<string> names, vector<vector<string>> contents)
     this->rows = contents.size();
 }
 
-string Dataset::cell(int row, int col)
+std::string Dataset::cell(int row, int col)
 {
     return contents[row][col];
 }
 
-int Dataset::colIndex(string colName)
+int Dataset::colIndex(std::string colName)
 {
-    auto it = find(this->names.begin(), this->names.end(), colName);
+    auto it = std::find(this->names.begin(), this->names.end(), colName);
     if (it != this->names.end())
     {
         return it - this->names.begin();
@@ -64,7 +65,7 @@ int Dataset::colIndex(string colName)
     }
 }
 
-string Dataset::cell(int row, string colName)
+std::string Dataset::cell(int row, std::string colName)
 {
     int colIndex = this->colIndex(colName);
     if (colIndex >= 0)
@@ -77,9 +78,9 @@ string Dataset::cell(int row, string colName)
     }
 }
 
-Dataset Dataset::split(vector<string> columnNames)
+Dataset Dataset::split(std::vector<std::string> columnNames)
 {
-    vector<int> columns;
+    std::vector<int> columns;
     for (auto columnName : columnNames)
     {
         int index = this->colIndex(columnName);
@@ -91,13 +92,13 @@ Dataset Dataset::split(vector<string> columnNames)
     return this->split(columns);
 }
 
-Dataset Dataset::split(vector<int> colums)
+Dataset Dataset::split(std::vector<int> colums)
 {
-    vector<string> columnNames;
-    vector<vector<string>> contents;
+    std::vector<std::string> columnNames;
+    std::vector<std::vector<std::string>> contents;
     for (size_t row = 0; row < this->contents.size(); ++row)
     {
-        contents.push_back(vector<string>());
+        contents.push_back(std::vector<std::string>());
     }
 
     for (auto index : colums)
@@ -114,21 +115,21 @@ Dataset Dataset::split(vector<int> colums)
 
 Pair<Dataset> Dataset::split(double ratio)
 {
-    vector<int> indexes;
+    std::vector<int> indexes;
     while (indexes.size() < (int)(this->contents.size() * ratio))
     {
         int selectedIndex = rand() % this->contents.size();
-        if (find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
+        if (std::find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
         {
             indexes.push_back(selectedIndex);
         }
     }
 
-    vector<vector<string>> firstContents;
-    vector<vector<string>> secondContents;
+    std::vector<std::vector<std::string>> firstContents;
+    std::vector<std::vector<std::string>> secondContents;
     for (int i = 0; i < this->contents.size(); ++i)
     {
-        if (find(indexes.begin(), indexes.end(), i) == indexes.end())
+        if (std::find(indexes.begin(), indexes.end(), i) == indexes.end())
         {
             firstContents.push_back(this->contents[i]);
         }

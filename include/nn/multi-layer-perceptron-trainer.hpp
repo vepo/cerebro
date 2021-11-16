@@ -5,15 +5,15 @@ class MultiLayerPerceptronTrainerParams
 {
 public:
     MultiLayerPerceptronTrainerParams(Dataset *dataset,
-                                      vector<string> xNames,
-                                      vector<string> yNames,
-                                      vector<int> layers,
+                                      std::vector<std::string> xNames,
+                                      std::vector<std::string> yNames,
+                                      std::vector<int> layers,
                                       double testSize = 0.15,
                                       double validationSize = 0.15);
     Dataset *dataset;
-    vector<string> xNames;
-    vector<string> yNames;
-    vector<int> layers;
+    std::vector<std::string> xNames;
+    std::vector<std::string> yNames;
+    std::vector<int> layers;
     double testSize;
     double validationSize;
 };

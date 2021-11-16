@@ -3,8 +3,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 enum DataType
 {
     STRING = 1,
@@ -18,15 +16,15 @@ enum DataType
 class NormalizedDataset
 {
 public:
-    NormalizedDataset(vector<string> names,
-                      vector<vector<string>> contents);
+    NormalizedDataset(std::vector<std::string> names,
+                      std::vector<std::vector<std::string>> contents);
     double cell(int row, int col);
-    double cell(int row, string colName);
+    double cell(int row, std::string colName);
     DataType type(int col);
-    DataType type(string colName);
+    DataType type(std::string colName);
 
 private:
-    vector<string> names;
-    vector<vector<double>> contents;
-    vector<DataType> types;
+    std::vector<std::string> names;
+    std::vector<std::vector<double>> contents;
+    std::vector<DataType> types;
 };

@@ -15,50 +15,48 @@
         -10, -10, 15 \
     }
 
-using namespace std;
-
 int main()
 {
     srand(time(NULL));
     rand();
 
-    cout << endl
-         << endl
-         << "------------- Logical Gate Example -------------"
-         << endl
-         << endl;
+    std::cout << std::endl
+              << std::endl
+              << "------------- Logical Gate Example -------------"
+              << std::endl
+              << std::endl;
     Perceptron *p = new Perceptron(2);
     p->set_weights(OR_WEIGHTS);
-    cout << "Gate: " << endl;
-    cout << p->run({0, 0}) << endl;
-    cout << p->run({0, 1}) << endl;
-    cout << p->run({1, 0}) << endl;
-    cout << p->run({1, 1}) << endl;
+    std::cout << "Gate: " << std::endl;
+    std::cout << p->run({0, 0}) << std::endl;
+    std::cout << p->run({0, 1}) << std::endl;
+    std::cout << p->run({1, 0}) << std::endl;
+    std::cout << p->run({1, 1}) << std::endl;
 
-    cout << endl
-         << endl
-         << "------------- Hardcoded XOR Example -------------"
-         << endl
-         << endl;
+    std::cout << std::endl
+              << std::endl
+              << "------------- Hardcoded XOR Example -------------"
+              << std::endl
+              << std::endl;
     MultiLayerPerceptron mlp = MultiLayerPerceptron({2, 2, 1});
     mlp.set_weights({{NAND_WEIGHTS, OR_WEIGHTS}, {AND_WEIGHTS}});
-    cout << "Hard-coded weights:\n";
+    std::cout << "Hard-coded weights:\n";
     mlp.print_weights();
 
-    cout << "XOR:" << endl;
-    cout << " 0 0 = " << mlp.run({0, 0})[0] << endl;
-    cout << " 0 1 = " << mlp.run({0, 1})[0] << endl;
-    cout << " 1 0 = " << mlp.run({1, 0})[0] << endl;
-    cout << " 1 1 = " << mlp.run({1, 1})[0] << endl;
+    std::cout << "XOR:" << std::endl;
+    std::cout << " 0 0 = " << mlp.run({0, 0})[0] << std::endl;
+    std::cout << " 0 1 = " << mlp.run({0, 1})[0] << std::endl;
+    std::cout << " 1 0 = " << mlp.run({1, 0})[0] << std::endl;
+    std::cout << " 1 1 = " << mlp.run({1, 1})[0] << std::endl;
 
-    cout << endl
-         << endl
-         << "------------- Trained XOR Example -------------"
-         << endl
-         << endl;
+    std::cout << std::endl
+              << std::endl
+              << "------------- Trained XOR Example -------------"
+              << std::endl
+              << std::endl;
 
     mlp = MultiLayerPerceptron({2, 2, 1});
-    cout << "Training Neural Network as an XOR Gate..." << endl;
+    std::cout << "Training Neural Network as an XOR Gate..." << std::endl;
     double MSE;
     for (int i = 0; i < 3000; ++i)
     {
@@ -70,20 +68,20 @@ int main()
         MSE = MSE / 4.0;
         if (i % 100 == 0)
         {
-            cout << "MSE = " << MSE << endl;
+            std::cout << "MSE = " << MSE << std::endl;
         }
     }
-    cout << endl
-         << endl
-         << "Trained weights (Compare to hard-coded weights):"
-         << endl
-         << endl;
+    std::cout << std::endl
+              << std::endl
+              << "Trained weights (Compare to hard-coded weights):"
+              << std::endl
+              << std::endl;
     mlp.print_weights();
 
-    cout << "XOR:" << endl;
-    cout << " 0 0 = " << mlp.run({0, 0})[0] << endl;
-    cout << " 0 1 = " << mlp.run({0, 1})[0] << endl;
-    cout << " 1 0 = " << mlp.run({1, 0})[0] << endl;
-    cout << " 1 1 = " << mlp.run({1, 1})[0] << endl;
+    std::cout << "XOR:" << std::endl;
+    std::cout << " 0 0 = " << mlp.run({0, 0})[0] << std::endl;
+    std::cout << " 0 1 = " << mlp.run({0, 1})[0] << std::endl;
+    std::cout << " 1 0 = " << mlp.run({1, 0})[0] << std::endl;
+    std::cout << " 1 1 = " << mlp.run({1, 1})[0] << std::endl;
     return 0;
 }
