@@ -24,6 +24,7 @@ public:
     DataType type(std::string colName);
 
 private:
+    std::vector<double> normalizeInteger(std::vector<std::vector<std::string>> contents, int col);
     std::vector<std::string> names;
     std::vector<std::vector<double>> contents;
     std::vector<DataType> types;
