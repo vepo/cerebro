@@ -24,5 +24,6 @@ public:
 
 private:
     int colIndex(const std::string &colName);
-    Dataset(std::vector<std::string> names, std::vector<std::vector<std::string>> contents);
+    Dataset(const std::vector<std::string> &names,
+            const std::vector<std::vector<std::string>> &contents);
 };

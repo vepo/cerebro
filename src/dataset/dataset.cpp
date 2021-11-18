@@ -27,7 +27,7 @@ Dataset::Dataset(std::string const &path)
         {
             if (reader.endOfLine())
             {
-                this->contents.emplace_back(std::vector<std::string>());
+                this->contents.emplace_back();
             }
             this->contents[counter - 1].emplace_back(reader.nextToken());
         }
@@ -40,13 +40,13 @@ Dataset::Dataset(std::string const &path)
     this->rows = counter - 1;
 }
 
-Dataset::Dataset(std::vector<std::string> names,
-                 std::vector<std::vector<std::string>> contents)
+Dataset::Dataset(const std::vector<std::string> &names,
+                 const std::vector<std::vector<std::string>> &contents)
+    : names(names),
+      contents(contents),
+      cols(names.size()),
+      rows(contents.size())
 {
-    this->names = names;
-    this->contents = contents;
-    this->cols = names.size();
-    this->rows = contents.size();
 }
 
 std::string Dataset::cell(int row, int col)
@@ -59,7 +59,7 @@ int Dataset::colIndex(const std::string &colName)
     auto it = std::find(this->names.begin(), this->names.end(), colName);
     if (it != this->names.end())
     {
-        return it - this->names.begin();
+        return (int)(it - this->names.begin());
     }
     else
     {
@@ -96,23 +96,21 @@ Dataset Dataset::split(const std::vector<std::string> &columnNames)
 
 Dataset Dataset::split(const std::vector<int> &colums)
 {
-    std::vector<std::string> columnNames;
-    std::vector<std::vector<std::string>> contents;
-    for (size_t row = 0; row < this->contents.size(); ++row)
-    {
-        contents.emplace_back(std::vector<std::string>());
-    }
+    std::vector<std::string> splitedColumnNames;
+    std::vector<std::vector<std::string>> splitedContents;
+    auto initialize_row = [=, &splitedContents](auto &__)
+    { splitedContents.emplace_back(); };
+    std::for_each(this->contents.cbegin(), this->contents.cend(), initialize_row);
 
     for (const auto &index : colums)
     {
-        columnNames.emplace_back(this->names[index]);
+        splitedColumnNames.emplace_back(this->names[index]);
         for (size_t row = 0; row < this->contents.size(); ++row)
         {
-            contents[row].emplace_back(this->contents[row][index]);
+            splitedContents[row].emplace_back(this->contents[row][index]);
         }
     }
-    Dataset inner(columnNames, contents);
-    return inner;
+    return Dataset(splitedColumnNames, splitedContents);
 }
 
 Pair<Dataset> Dataset::split(double ratio)
@@ -147,6 +145,5 @@ Pair<Dataset> Dataset::split(double ratio)
 
 NormalizedDataset Dataset::normalize()
 {
-    NormalizedDataset nd(this->names, this->contents);
-    return nd;
+    return NormalizedDataset(this->names, this->contents);
 }
