@@ -2,11 +2,8 @@
 
 CDIR=`pwd`
 
-for source_file in $(find src/**/ -name '*.cpp')
+for object_file in $(find build/**/ -name '*.o')
 do
-    echo $source_file
-    cd $(dirname $source_file)
-    gcov $(basename $source_file) --object-directory $CDIR/build/objects/${PWD##*/}
-    cd -
+    gcov $object_file --relative-only
 done
 lcov -c --directory build/objects --output-file main_coverage.info

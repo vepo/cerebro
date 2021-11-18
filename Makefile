@@ -56,13 +56,16 @@ test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
 
-coverage:
+coverage: test
 	./test-coverage.sh
 
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
-	-@rm -rvf *.gcov *.gcno *.gcda *.stackdump
+	-@find . -name '*.gcov'      -exec rm -rv -- '{}' +
+	-@find . -name '*.gcno'      -exec rm -rv -- '{}' +
+	-@find . -name '*.gcda'      -exec rm -rv -- '{}' +
+	-@find . -name '*.stackdump' -exec rm -rv -- '{}' +
 
 info:
 	@echo "[*] Application dir: ${APP_DIR}     "
