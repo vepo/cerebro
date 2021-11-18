@@ -21,7 +21,7 @@ public:
 class MultiLayerPerceptronTrainer
 {
 public:
-    MultiLayerPerceptronTrainer(MultiLayerPerceptronTrainerParams *params);
+    explicit MultiLayerPerceptronTrainer(MultiLayerPerceptronTrainerParams *params);
     void run();
 
 private:

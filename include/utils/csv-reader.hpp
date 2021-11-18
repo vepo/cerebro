@@ -7,7 +7,7 @@
 class CSVReader
 {
 public:
-    CSVReader(std::string path);
+    explicit CSVReader(std::string path);
     ~CSVReader();
     std::string nextToken();
     bool hasNextToken();

@@ -54,7 +54,7 @@ std::string Dataset::cell(int row, int col)
     return contents[row][col];
 }
 
-int Dataset::colIndex(std::string colName)
+int Dataset::colIndex(const std::string &colName)
 {
     auto it = std::find(this->names.begin(), this->names.end(), colName);
     if (it != this->names.end())
@@ -67,7 +67,7 @@ int Dataset::colIndex(std::string colName)
     }
 }
 
-std::string Dataset::cell(int row, std::string colName)
+std::string Dataset::cell(int row, const std::string &colName)
 {
     int colIndex = this->colIndex(colName);
     if (colIndex >= 0)
@@ -80,10 +80,10 @@ std::string Dataset::cell(int row, std::string colName)
     }
 }
 
-Dataset Dataset::split(std::vector<std::string> columnNames)
+Dataset Dataset::split(const std::vector<std::string> &columnNames)
 {
     std::vector<int> columns;
-    for (auto columnName : columnNames)
+    for (const auto &columnName : columnNames)
     {
         int index = this->colIndex(columnName);
         if (index >= 0)
@@ -94,7 +94,7 @@ Dataset Dataset::split(std::vector<std::string> columnNames)
     return this->split(columns);
 }
 
-Dataset Dataset::split(std::vector<int> colums)
+Dataset Dataset::split(const std::vector<int> &colums)
 {
     std::vector<std::string> columnNames;
     std::vector<std::vector<std::string>> contents;
@@ -103,7 +103,7 @@ Dataset Dataset::split(std::vector<int> colums)
         contents.emplace_back(std::vector<std::string>());
     }
 
-    for (auto index : colums)
+    for (const auto &index : colums)
     {
         columnNames.emplace_back(this->names[index]);
         for (size_t row = 0; row < this->contents.size(); ++row)

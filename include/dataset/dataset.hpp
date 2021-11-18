@@ -9,20 +9,20 @@
 class Dataset
 {
 public:
-    Dataset(std::string const &path);
+    explicit Dataset(std::string const &path);
     std::string cell(int row, int col);
-    std::string cell(int row, std::string colName);
-    int colIndex(std::string colName);
+    std::string cell(int row, const std::string &colName);
 
     int cols;
     int rows;
+    std::vector<std::vector<std::string>> contents;
     std::vector<std::string> names;
-    Dataset split(std::vector<std::string> columnNames);
-    Dataset split(std::vector<int> colums);
+    Dataset split(const std::vector<std::string> &columnNames);
+    Dataset split(const std::vector<int> &colums);
     Pair<Dataset> split(double ratio);
     NormalizedDataset normalize();
 
 private:
+    int colIndex(const std::string &colName);
     Dataset(std::vector<std::string> names, std::vector<std::vector<std::string>> contents);
-    std::vector<std::vector<std::string>> contents;
 };
