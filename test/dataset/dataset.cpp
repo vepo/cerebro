@@ -7,9 +7,9 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV")
     {
         Dataset dataset = Dataset("./test/dataset/simple.csv");
-        CHECK_EQ(dataset.names, std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
-        CHECK_EQ(dataset.cols, 6);
-        CHECK_EQ(dataset.rows, 6);
+        CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
+        CHECK_EQ(dataset.cols(), 6);
+        CHECK_EQ(dataset.rows(), 6);
         CHECK_EQ(dataset.cell(0, 0), "1");
         CHECK_EQ(dataset.cell(0, 1), "Joe");
         CHECK_EQ(dataset.cell(0, 2), "38");
@@ -64,9 +64,9 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV - Whitespace")
     {
         Dataset dataset = Dataset("./test/dataset/simple-whitespace.csv");
-        CHECK_EQ(dataset.names, std::vector<std::string>({"ID", "NAME", "AGE"}));
-        CHECK_EQ(dataset.cols, 3);
-        CHECK_EQ(dataset.rows, 3);
+        CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
+        CHECK_EQ(dataset.cols(), 3);
+        CHECK_EQ(dataset.rows(), 3);
         CHECK_EQ(dataset.cell(0, 0), "1");
         CHECK_EQ(dataset.cell(0, 1), "Joe");
         CHECK_EQ(dataset.cell(0, 2), "38");
@@ -83,9 +83,9 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV - Escaped")
     {
         Dataset dataset = Dataset("./test/dataset/escaped.csv");
-        CHECK_EQ(dataset.names, std::vector<std::string>({"ID", "NAME", "AGE"}));
-        CHECK_EQ(dataset.cols, 3);
-        CHECK_EQ(dataset.rows, 3);
+        CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
+        CHECK_EQ(dataset.cols(), 3);
+        CHECK_EQ(dataset.rows(), 3);
         CHECK_EQ(dataset.cell(0, 0), "1");
         CHECK_EQ(dataset.cell(0, 1), "Doe, Joe");
         CHECK_EQ(dataset.cell(0, 2), "38");
@@ -102,9 +102,9 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV - New Line")
     {
         Dataset dataset = Dataset("./test/dataset/escaped-crlf.csv");
-        CHECK_EQ(dataset.names, std::vector<std::string>({"ID", "NAME", "AGE"}));
-        CHECK_EQ(dataset.cols, 3);
-        CHECK_EQ(dataset.rows, 3);
+        CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
+        CHECK_EQ(dataset.cols(), 3);
+        CHECK_EQ(dataset.rows(), 3);
         CHECK_EQ(dataset.cell(0, 0), "1");
         CHECK_EQ(dataset.cell(0, 1), "Doe\r\nJoe");
         CHECK_EQ(dataset.cell(0, 2), "38");
@@ -121,9 +121,9 @@ TEST_CASE("Reading dataset")
     SUBCASE("Simple CSV - Quotes")
     {
         Dataset dataset = Dataset("./test/dataset/escaped-with-quotes.csv");
-        CHECK_EQ(dataset.names, std::vector<std::string>({"ID", "NAME", "AGE"}));
-        CHECK_EQ(dataset.cols, 3);
-        CHECK_EQ(dataset.rows, 3);
+        CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
+        CHECK_EQ(dataset.cols(), 3);
+        CHECK_EQ(dataset.rows(), 3);
         CHECK_EQ(dataset.cell(0, 0), "1");
         CHECK_EQ(dataset.cell(0, 1), "Doe \"Joe\"");
         CHECK_EQ(dataset.cell(0, 2), "38");
@@ -144,9 +144,9 @@ TEST_CASE("Spliting dataset")
     {
         Dataset dataset = Dataset("./test/dataset/simple.csv");
         Dataset x = dataset.split(std::vector<std::string>({"ID", "NAME"}));
-        CHECK_EQ(x.names, std::vector<std::string>({"ID", "NAME"}));
-        CHECK_EQ(x.cols, 2);
-        CHECK_EQ(x.rows, 6);
+        CHECK_EQ(x.names(), std::vector<std::string>({"ID", "NAME"}));
+        CHECK_EQ(x.cols(), 2);
+        CHECK_EQ(x.rows(), 6);
 
         CHECK_EQ(x.cell(0, 0), "1");
         CHECK_EQ(x.cell(0, 1), "Joe");
@@ -174,10 +174,10 @@ TEST_CASE("Spliting dataset")
     {
         Dataset dataset = Dataset("./test/dataset/simple.csv");
         Pair<Dataset> pair = dataset.split(0.33);
-        CHECK_EQ(pair.first.names, std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
-        CHECK_EQ(pair.second.names, std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
+        CHECK_EQ(pair.first.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
+        CHECK_EQ(pair.second.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
 
-        CHECK_EQ(pair.first.rows, 2);
-        CHECK_EQ(pair.second.rows, 4);
+        CHECK_EQ(pair.first.rows(), 2);
+        CHECK_EQ(pair.second.rows(), 4);
     }
 }
