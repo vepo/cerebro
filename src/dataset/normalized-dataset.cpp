@@ -19,10 +19,9 @@ std::vector<std::string> NormalizedDataset::FALSE_VALUES = {"f", "false", "n", "
  * @param names column names
  * @param contents original data 
  */
-NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
-                                     std::vector<std::vector<std::string>> contents)
+NormalizedDataset::NormalizedDataset(const std::vector<std::string> &names,
+                                     const std::vector<std::vector<std::string>> &contents) : _names(names)
 {
-    this->names = names;
     std::regex integerPattern("\\s*-?\\s*[0-9]+\\s*");
     std::regex floatingPointPattern("\\s*-?\\s*[0-9]*\\.[0-9]*\\s*");
     std::regex enumPattern("\\s*[A-Za-z0-9\\s]+\\s*");
@@ -63,38 +62,38 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
             supposedType = DataType::STRING;
         }
 
-        this->types.emplace_back(supposedType);
+        _types.emplace_back(supposedType);
 
         switch (supposedType)
         {
         case DataType::STRING:
-            this->contents.emplace_back(std::vector<double>());
+            _contents.emplace_back(std::vector<double>());
             break;
         case DataType::INTEGER:
-            this->contents.emplace_back(normalizeInteger(contents, column));
+            _contents.emplace_back(normalizeInteger(contents, column));
             break;
         case DataType::FLOATING_POINT:
-            this->contents.emplace_back(normalizeFloatingPoint(contents, column));
+            _contents.emplace_back(normalizeFloatingPoint(contents, column));
             break;
         case DataType::ENUM:
-            this->contents.emplace_back(normalizeEnum(contents, column));
+            _contents.emplace_back(normalizeEnum(contents, column));
             break;
         case DataType::BOOLEAN:
-            this->contents.emplace_back(normalizeBoolean(contents, column));
+            _contents.emplace_back(normalizeBoolean(contents, column));
             break;
         case DataType::TEXT:
-            this->contents.emplace_back(std::vector<double>());
+            _contents.emplace_back(std::vector<double>());
             break;
         }
     }
 }
 
-int NormalizedDataset::colIndex(std::string colName)
+int NormalizedDataset::colIndex(const std::string &colName)
 {
-    auto it = std::find(this->names.begin(), this->names.end(), colName);
-    if (it != this->names.end())
+    auto it = std::find(_names.begin(), _names.end(), colName);
+    if (it != _names.end())
     {
-        return it - this->names.begin();
+        return it - _names.begin();
     }
     else
     {
@@ -105,9 +104,9 @@ int NormalizedDataset::colIndex(std::string colName)
 double NormalizedDataset::cell(int row,
                                int col)
 {
-    if (contents.size() > col && contents[col].size() > row)
+    if (_contents.size() > col && _contents[col].size() > row)
     {
-        return contents[col][row];
+        return _contents[col][row];
     }
     else
     {
@@ -116,12 +115,14 @@ double NormalizedDataset::cell(int row,
 }
 
 double NormalizedDataset::cell(int row,
-                               std::string colName)
+                               const std::string &colName)
 {
     int colIndex = this->colIndex(colName);
-    if (colIndex >= 0 && contents.size() > colIndex && contents[colIndex].size() > row)
+    if (colIndex >= 0 &&
+        _contents.size() > colIndex &&
+        _contents[colIndex].size() > row)
     {
-        return contents[colIndex][row];
+        return _contents[colIndex][row];
     }
     else
     {
@@ -131,15 +132,15 @@ double NormalizedDataset::cell(int row,
 
 DataType NormalizedDataset::type(int col)
 {
-    return this->types[col];
+    return _types[col];
 }
 
-DataType NormalizedDataset::type(std::string colName)
+DataType NormalizedDataset::type(const std::string &colName)
 {
-    auto it = std::find(this->names.begin(), this->names.end(), colName);
-    if (it != this->names.end())
+    auto it = std::find(_names.begin(), _names.end(), colName);
+    if (it != _names.end())
     {
-        return type(it - this->names.begin());
+        return type(it - _names.begin());
     }
     else
     {
@@ -147,7 +148,7 @@ DataType NormalizedDataset::type(std::string colName)
     }
 }
 
-std::vector<double> NormalizedDataset::normalizeInteger(std::vector<std::vector<std::string>> contents,
+std::vector<double> NormalizedDataset::normalizeInteger(const std::vector<std::vector<std::string>> &contents,
                                                         int col)
 {
     int min = std::numeric_limits<int>::max();
@@ -179,7 +180,8 @@ std::vector<double> NormalizedDataset::normalizeInteger(std::vector<std::vector<
     return normalizedValues;
 }
 
-std::vector<double> NormalizedDataset::normalizeEnum(std::vector<std::vector<std::string>> contents, int col)
+std::vector<double> NormalizedDataset::normalizeEnum(const std::vector<std::vector<std::string>> &contents,
+                                                     int col)
 {
     std::vector<std::string> loadedValues;
     std::vector<int> values;
@@ -205,7 +207,8 @@ std::vector<double> NormalizedDataset::normalizeEnum(std::vector<std::vector<std
     return normalizedValues;
 }
 
-std::vector<double> NormalizedDataset::normalizeFloatingPoint(std::vector<std::vector<std::string>> contents, int col)
+std::vector<double> NormalizedDataset::normalizeFloatingPoint(const std::vector<std::vector<std::string>> &contents,
+                                                              int col)
 {
     double min = std::numeric_limits<double>::max();
     double max = std::numeric_limits<double>::min();
@@ -236,7 +239,8 @@ std::vector<double> NormalizedDataset::normalizeFloatingPoint(std::vector<std::v
     return normalizedValues;
 }
 
-std::vector<double> NormalizedDataset::normalizeBoolean(std::vector<std::vector<std::string>> contents, int col)
+std::vector<double> NormalizedDataset::normalizeBoolean(const std::vector<std::vector<std::string>> &contents,
+                                                        int col)
 {
     std::string trueValue;
     std::string falseValue;

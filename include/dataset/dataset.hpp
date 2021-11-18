@@ -16,7 +16,7 @@ public:
     Dataset split(const std::vector<std::string> &columnNames);
     Dataset split(const std::vector<int> &colums);
     Pair<Dataset> split(double ratio);
-    NormalizedDataset normalize();
+    NormalizedDataset normalize() const;
     const std::vector<std::string> &names() { return this->_names; };
     int cols() { return this->_cols; };
     int rows() { return this->_rows; };

@@ -16,22 +16,22 @@ enum class DataType
 class NormalizedDataset
 {
 public:
-    NormalizedDataset(std::vector<std::string> names,
-                      std::vector<std::vector<std::string>> contents);
+    NormalizedDataset(const std::vector<std::string> &names,
+                      const std::vector<std::vector<std::string>> &contents);
     double cell(int row, int col);
-    double cell(int row, std::string colName);
+    double cell(int row, const std::string &colName);
     DataType type(int col);
-    DataType type(std::string colName);
+    DataType type(const std::string &colName);
 
 private:
-    std::vector<double> normalizeInteger(std::vector<std::vector<std::string>> contents, int col);
-    std::vector<double> normalizeEnum(std::vector<std::vector<std::string>> contents, int col);
-    std::vector<double> normalizeFloatingPoint(std::vector<std::vector<std::string>> contents, int col);
-    std::vector<double> normalizeBoolean(std::vector<std::vector<std::string>> contents, int col);
-    int colIndex(std::string colName);
-    std::vector<std::string> names;
-    std::vector<std::vector<double>> contents;
-    std::vector<DataType> types;
+    std::vector<double> normalizeInteger(const std::vector<std::vector<std::string>> &contents, int col);
+    std::vector<double> normalizeEnum(const std::vector<std::vector<std::string>> &contents, int col);
+    std::vector<double> normalizeFloatingPoint(const std::vector<std::vector<std::string>> &contents, int col);
+    std::vector<double> normalizeBoolean(const std::vector<std::vector<std::string>> &contents, int col);
+    int colIndex(const std::string &colName);
+    std::vector<std::string> _names;
+    std::vector<std::vector<double>> _contents;
+    std::vector<DataType> _types;
     static std::vector<std::string> TRUE_VALUES;
     static std::vector<std::string> FALSE_VALUES;
 };

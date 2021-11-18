@@ -138,7 +138,7 @@ Pair<Dataset> Dataset::split(double ratio)
                          Dataset(_names, secondContents));
 }
 
-NormalizedDataset Dataset::normalize()
+NormalizedDataset Dataset::normalize() const
 {
     return NormalizedDataset(_names, _contents);
 }
