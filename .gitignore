@@ -2,3 +2,5 @@ build
 .vscode
 *.gcda
 *.gcno
+*.stackdump
+*.gcov

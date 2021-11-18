@@ -33,11 +33,11 @@ jobs:
       - name: Run build-wrapper
         run: |
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make test
-          for source_file in $(find src -name '*.cpp')
+          for source_file in $(find src/**/ -name '*.cpp')
           do
               echo $source_file
               cd $(dirname $source_file)
-              gcov $(basename $source_file)
+              gcov $(basename $source_file) --object-directory $RFOLDER/build/objects/${PWD##*/}
               cd -
           done
       - name: Run sonar-scanner

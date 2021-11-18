@@ -1,6 +1,6 @@
 CXX             := -c++
 LDFLAGS         := -L/usr/lib -lstdc++ -lm
-CXXFLAGS        := -fprofile-arcs -ftest-coverage 
+CXXFLAGS        := --coverage
 BUILD           := ./build
 OBJ_DIR         := $(BUILD)/objects
 APP_DIR         := $(BUILD)/apps
@@ -10,7 +10,7 @@ SRC             := $(wildcard src/*/*.cpp)
 MAINS           := $(wildcard src/*.cpp)
 PROGS           := $(MAINS:src/%.cpp=%)
 BINS            := $(MAINS:src/%.cpp=$(APP_DIR)%)
-OBJECTS         := $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+OBJECTS         := $(SRC:src/%.cpp=$(OBJ_DIR)/%.o)
 DEPENDENCIES    := $(OBJECTS:.o=.d)
 
 
@@ -22,11 +22,11 @@ DOCTEST_INCLUDE := -I$(DOCTEST_DIR)/doctest
 
 all: build $(PROGS)
 
-$(OBJ_DIR)/%.o: %.cpp
+$(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -MMD -o $@
 
-%: src/%.cpp $(OBJECTS)
+$(OBJ_DIR)/%: src/%.cpp $(OBJECTS)
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) src/$@.cpp -o $(APP_DIR)/$@ $(OBJECTS) $(LDFLAGS)
 
@@ -57,11 +57,12 @@ clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
 
 coverage:
-	lcov --coverage --directory . --output-file main_coverage.info
+	./test-coverage.sh
 
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
+	-@rm -rvf *.gcov *.gcno *.gcda *.stackdump
 
 info:
 	@echo "[*] Application dir: ${APP_DIR}     "
