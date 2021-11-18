@@ -6,7 +6,7 @@ TEST_CASE("Reading dataset")
 {
     SUBCASE("Simple CSV")
     {
-        Dataset dataset = Dataset("./test/dataset/simple.csv");
+        Dataset dataset("./test/dataset/simple.csv");
         CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
         CHECK_EQ(dataset.cols(), 6);
         CHECK_EQ(dataset.rows(), 6);
@@ -63,7 +63,7 @@ TEST_CASE("Reading dataset")
 
     SUBCASE("Simple CSV - Whitespace")
     {
-        Dataset dataset = Dataset("./test/dataset/simple-whitespace.csv");
+        Dataset dataset("./test/dataset/simple-whitespace.csv");
         CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
         CHECK_EQ(dataset.cols(), 3);
         CHECK_EQ(dataset.rows(), 3);
@@ -82,7 +82,7 @@ TEST_CASE("Reading dataset")
 
     SUBCASE("Simple CSV - Escaped")
     {
-        Dataset dataset = Dataset("./test/dataset/escaped.csv");
+        Dataset dataset("./test/dataset/escaped.csv");
         CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
         CHECK_EQ(dataset.cols(), 3);
         CHECK_EQ(dataset.rows(), 3);
@@ -101,7 +101,7 @@ TEST_CASE("Reading dataset")
 
     SUBCASE("Simple CSV - New Line")
     {
-        Dataset dataset = Dataset("./test/dataset/escaped-crlf.csv");
+        Dataset dataset("./test/dataset/escaped-crlf.csv");
         CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
         CHECK_EQ(dataset.cols(), 3);
         CHECK_EQ(dataset.rows(), 3);
@@ -120,7 +120,7 @@ TEST_CASE("Reading dataset")
 
     SUBCASE("Simple CSV - Quotes")
     {
-        Dataset dataset = Dataset("./test/dataset/escaped-with-quotes.csv");
+        Dataset dataset("./test/dataset/escaped-with-quotes.csv");
         CHECK_EQ(dataset.names(), std::vector<std::string>({"ID", "NAME", "AGE"}));
         CHECK_EQ(dataset.cols(), 3);
         CHECK_EQ(dataset.rows(), 3);
@@ -142,7 +142,7 @@ TEST_CASE("Spliting dataset")
 {
     SUBCASE("By Column")
     {
-        Dataset dataset = Dataset("./test/dataset/simple.csv");
+        Dataset dataset("./test/dataset/simple.csv");
         Dataset x = dataset.split(std::vector<std::string>({"ID", "NAME"}));
         CHECK_EQ(x.names(), std::vector<std::string>({"ID", "NAME"}));
         CHECK_EQ(x.cols(), 2);
@@ -172,7 +172,7 @@ TEST_CASE("Spliting dataset")
 
     SUBCASE("By Row")
     {
-        Dataset dataset = Dataset("./test/dataset/simple.csv");
+        Dataset dataset("./test/dataset/simple.csv");
         Pair<Dataset> pair = dataset.split(0.33);
         CHECK_EQ(pair.first.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));
         CHECK_EQ(pair.second.names(), std::vector<std::string>({"ID", "NAME", "AGE", "SEX", "CLASS", "GRADE"}));

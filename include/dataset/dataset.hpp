@@ -10,6 +10,7 @@ class Dataset
 {
 public:
     explicit Dataset(std::string const &path);
+    Dataset(const Dataset &src);
     std::string cell(int row, int col);
     std::string cell(int row, const std::string &colName);
 
@@ -17,9 +18,9 @@ public:
     Dataset split(const std::vector<int> &colums) const;
     Pair<Dataset> split(double ratio) const;
     NormalizedDataset normalize() const;
-    const std::vector<std::string> &names() { return this->_names; };
-    int cols() { return this->_cols; };
-    int rows() { return this->_rows; };
+    const std::vector<std::string> &names() const { return this->_names; };
+    int cols() const { return this->_cols; };
+    int rows() const { return this->_rows; };
 
 private:
     std::vector<std::string> _names;
@@ -27,7 +28,6 @@ private:
     int _cols;
     int _rows;
     int colIndex(const std::string &colName) const;
-    Dataset(const Dataset &src);
-    Dataset(const std::vector<std::string> &names,
-            const std::vector<std::vector<std::string>> &contents);
+    Dataset(std::vector<std::string> names,
+            std::vector<std::vector<std::string>> contents);
 };

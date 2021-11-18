@@ -4,8 +4,8 @@ template <class TYPE>
 class Pair
 {
 public:
-    Pair(const TYPE &f, const TYPE &s) : first(f), second(s){};
+    Pair(TYPE f, const TYPE s) : first(f), second(s){};
 
-    const TYPE &first;
-    const TYPE &second;
+    TYPE first;
+    TYPE second;
 };

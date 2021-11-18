@@ -41,8 +41,8 @@ Dataset::Dataset(const Dataset &src) : _names(src._names),
 {
 }
 
-Dataset::Dataset(const std::vector<std::string> &names,
-                 const std::vector<std::vector<std::string>> &contents)
+Dataset::Dataset(std::vector<std::string> names,
+                 std::vector<std::vector<std::string>> contents)
     : _names(names),
       _contents(contents),
       _cols(names.size()),
