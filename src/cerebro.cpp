@@ -17,9 +17,6 @@
 
 int main()
 {
-    srand(time(NULL));
-    rand();
-
     std::cout << std::endl
               << std::endl
               << "------------- Logical Gate Example -------------"

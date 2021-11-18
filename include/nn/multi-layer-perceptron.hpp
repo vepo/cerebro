@@ -1,10 +1,7 @@
 #pragma once
-#include <algorithm>
+
 #include <vector>
-#include <random>
-#include <numeric>
-#include <cmath>
-#include <time.h>
+
 #include "perceptron.hpp"
 
 class MultiLayerPerceptron
