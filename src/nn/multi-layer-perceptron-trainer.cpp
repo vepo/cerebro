@@ -2,32 +2,30 @@
 #include "nn/multi-layer-perceptron.hpp"
 #include <iostream>
 
-MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(Dataset *dataset,
-                                                                     std::vector<std::string> xNames,
-                                                                     std::vector<std::string> yNames,
-                                                                     std::vector<int> layers,
+MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(const Dataset &dataset,
+                                                                     const std::vector<std::string> &xNames,
+                                                                     const std::vector<std::string> &yNames,
+                                                                     const std::vector<int> &layers,
                                                                      double testSize,
-                                                                     double validationSize)
+                                                                     double validationSize) : dataset(dataset),
+                                                                                              xNames(xNames),
+                                                                                              yNames(yNames),
+                                                                                              layers(layers),
+                                                                                              testSize(testSize),
+                                                                                              validationSize(validationSize)
 {
-    this->dataset = dataset;
-    this->xNames = xNames;
-    this->yNames = yNames;
-    this->layers = layers;
-    this->testSize = testSize;
-    this->validationSize = validationSize;
 }
 
-MultiLayerPerceptronTrainer::MultiLayerPerceptronTrainer(MultiLayerPerceptronTrainerParams *params)
+MultiLayerPerceptronTrainer::MultiLayerPerceptronTrainer(const MultiLayerPerceptronTrainerParams &params) : params(params)
 {
-    this->params = params;
 }
 
 void MultiLayerPerceptronTrainer::run()
 {
-    MultiLayerPerceptron mlp = MultiLayerPerceptron(this->params->layers);
+    MultiLayerPerceptron mlp = MultiLayerPerceptron(this->params.layers);
     std::cout << "Training Neural Network..." << std::endl;
     //this->params->dataset->normalize();
-    this->params->dataset->split(this->params->testSize);
+    Pair<Dataset> pair = this->params.dataset.split(this->params.testSize);
     double MSE;
     for (int i = 0; i < 3000; ++i)
     {

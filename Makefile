@@ -27,9 +27,12 @@ $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -MMD -o $@
 
-$(OBJ_DIR)/%: src/%.cpp $(OBJECTS)
+$(APP_DIR)/%: src/%.cpp $(OBJECTS)
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) src/$@.cpp -o $(APP_DIR)/$@ $(OBJECTS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $< -o $@ $(OBJECTS) $(LDFLAGS)
+
+%: $(APP_DIR)/%
+	@cp $< $@
 
 -include $(DEPENDENCIES)
 

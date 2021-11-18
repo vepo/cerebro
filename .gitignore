@@ -4,3 +4,9 @@ build
 *.gcno
 *.stackdump
 *.gcov
+
+cerebro.exe
+train-dnn.exe
+
+cerebro
+train-dnn

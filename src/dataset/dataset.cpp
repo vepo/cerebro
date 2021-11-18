@@ -34,6 +34,12 @@ Dataset::Dataset(std::string const &path) : _cols(0), _rows(0)
     }
     _rows = counter - 1;
 }
+Dataset::Dataset(const Dataset &src) : _names(src._names),
+                                       _contents(src._contents),
+                                       _cols(src._cols),
+                                       _rows(src._rows)
+{
+}
 
 Dataset::Dataset(const std::vector<std::string> &names,
                  const std::vector<std::vector<std::string>> &contents)
@@ -49,7 +55,7 @@ std::string Dataset::cell(int row, int col)
     return _contents[row][col];
 }
 
-int Dataset::colIndex(const std::string &colName)
+int Dataset::colIndex(const std::string &colName) const
 {
     auto it = std::find(_names.begin(), _names.end(), colName);
     if (it != _names.end())
@@ -75,7 +81,7 @@ std::string Dataset::cell(int row, const std::string &colName)
     }
 }
 
-Dataset Dataset::split(const std::vector<std::string> &columnNames)
+Dataset Dataset::split(const std::vector<std::string> &columnNames) const
 {
     std::vector<int> columns;
     for (const auto &columnName : columnNames)
@@ -89,7 +95,7 @@ Dataset Dataset::split(const std::vector<std::string> &columnNames)
     return this->split(columns);
 }
 
-Dataset Dataset::split(const std::vector<int> &colums)
+Dataset Dataset::split(const std::vector<int> &colums) const
 {
     std::vector<std::string> splitedColumnNames;
     std::vector<std::vector<std::string>> splitedContents;
@@ -108,7 +114,7 @@ Dataset Dataset::split(const std::vector<int> &colums)
     return Dataset(splitedColumnNames, splitedContents);
 }
 
-Pair<Dataset> Dataset::split(double ratio)
+Pair<Dataset> Dataset::split(double ratio) const
 {
     std::vector<int> indexes;
     while (indexes.size() < (int)std::round(_contents.size() * ratio))

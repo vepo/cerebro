@@ -13,9 +13,9 @@ public:
     std::string cell(int row, int col);
     std::string cell(int row, const std::string &colName);
 
-    Dataset split(const std::vector<std::string> &columnNames);
-    Dataset split(const std::vector<int> &colums);
-    Pair<Dataset> split(double ratio);
+    Dataset split(const std::vector<std::string> &columnNames) const;
+    Dataset split(const std::vector<int> &colums) const;
+    Pair<Dataset> split(double ratio) const;
     NormalizedDataset normalize() const;
     const std::vector<std::string> &names() { return this->_names; };
     int cols() { return this->_cols; };
@@ -26,7 +26,8 @@ private:
     std::vector<std::vector<std::string>> _contents;
     int _cols;
     int _rows;
-    int colIndex(const std::string &colName);
+    int colIndex(const std::string &colName) const;
+    Dataset(const Dataset &src);
     Dataset(const std::vector<std::string> &names,
             const std::vector<std::vector<std::string>> &contents);
 };

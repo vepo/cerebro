@@ -4,16 +4,16 @@
 class MultiLayerPerceptronTrainerParams
 {
 public:
-    MultiLayerPerceptronTrainerParams(Dataset *dataset,
-                                      std::vector<std::string> xNames,
-                                      std::vector<std::string> yNames,
-                                      std::vector<int> layers,
+    MultiLayerPerceptronTrainerParams(const Dataset &dataset,
+                                      const std::vector<std::string> &xNames,
+                                      const std::vector<std::string> &yNames,
+                                      const std::vector<int> &layers,
                                       double testSize = 0.15,
                                       double validationSize = 0.15);
-    Dataset *dataset;
-    std::vector<std::string> xNames;
-    std::vector<std::string> yNames;
-    std::vector<int> layers;
+    const Dataset &dataset;
+    const std::vector<std::string> &xNames;
+    const std::vector<std::string> &yNames;
+    const std::vector<int> &layers;
     double testSize;
     double validationSize;
 };
@@ -21,9 +21,9 @@ public:
 class MultiLayerPerceptronTrainer
 {
 public:
-    explicit MultiLayerPerceptronTrainer(MultiLayerPerceptronTrainerParams *params);
+    explicit MultiLayerPerceptronTrainer(const MultiLayerPerceptronTrainerParams &params);
     void run();
 
 private:
-    MultiLayerPerceptronTrainerParams *params;
+    const MultiLayerPerceptronTrainerParams &params;
 };

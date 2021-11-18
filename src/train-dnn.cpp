@@ -6,11 +6,16 @@
 
 int main(int argc, char *argv[])
 {
-    Parameters params = Parameters::parse(argc, argv);
-    MultiLayerPerceptronTrainerParams params(params.datasetFile(),
-                                             params.inputNames(),
-                                             params.outpuFile(),
-                                             params.layers());
+    std::vector<std::string> args;
+    if (argc > 1)
+    {
+        args.assign(argv + 1, argv + argc);
+    }
+    Parameters params = Parameters::parse(args);
+    MultiLayerPerceptronTrainerParams mlpParams(Dataset(params.datasetFile()),
+                                                params.inputNames(),
+                                                params.outputNames(),
+                                                params.layers());
     std::cout << "Training House Predictor..." << std::endl;
     return 0;
 }
