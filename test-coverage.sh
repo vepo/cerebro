@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash -e
 
 CDIR=`pwd`
 
@@ -9,4 +9,4 @@ do
     gcov $(basename $source_file) --object-directory $CDIR/build/objects/${PWD##*/}
     cd -
 done
-lcov --coverage --directory . --output-file main_coverage.info
+lcov -c --directory build/objects --output-file main_coverage.info
