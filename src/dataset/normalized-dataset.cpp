@@ -5,6 +5,9 @@
 #include <limits>
 #include <string>
 
+std::vector<std::string> NormalizedDataset::TRUE_VALUES = {"t", "true", "s", "sim"};
+std::vector<std::string> NormalizedDataset::FALSE_VALUES = {"f", "false", "n", "não", "nao"};
+
 /**
  * @brief Construct a new Normalized Dataset:: Normalized Dataset object
  * 
@@ -21,7 +24,7 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
 {
     this->names = names;
     std::regex integerPattern("\\s*-?\\s*[0-9]+\\s*");
-    std::regex floatingPointPattern("\\s*-?\\s*[0-9]*\\.[0-9]+\\s*");
+    std::regex floatingPointPattern("\\s*-?\\s*[0-9]*\\.[0-9]*\\s*");
     std::regex enumPattern("\\s*[A-Za-z0-9\\s]+\\s*");
 
     for (int column = 0; column < names.size(); column++)
@@ -38,8 +41,10 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
                 {
                     continue;
                 }
-                else if ((supposedType == DataType::INTEGER || supposedType == DataType::FLOATING_POINT) &&
-                         regex_match(contents[row][column], floatingPointPattern))
+                else if ((supposedType == DataType::INTEGER ||
+                          supposedType == DataType::FLOATING_POINT) &&
+                         (regex_match(contents[row][column], floatingPointPattern) ||
+                          regex_match(contents[row][column], integerPattern)))
                 {
                     supposedType = DataType::FLOATING_POINT;
                 }

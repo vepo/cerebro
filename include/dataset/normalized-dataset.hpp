@@ -32,6 +32,6 @@ private:
     std::vector<std::string> names;
     std::vector<std::vector<double>> contents;
     std::vector<DataType> types;
-    std::vector<std::string> TRUE_VALUES = {"t", "true", "s", "sim"};
-    std::vector<std::string> FALSE_VALUES = {"f", "false", "n", "não", "nao"};
+    static std::vector<std::string> TRUE_VALUES;
+    static std::vector<std::string> FALSE_VALUES;
 };

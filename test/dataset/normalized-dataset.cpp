@@ -6,6 +6,21 @@ TEST_CASE("Reading dataset")
 {
     Dataset dataset = Dataset("./test/dataset/simple.csv");
     NormalizedDataset nd = dataset.normalize();
+
+    CHECK_EQ(nd.type(0), DataType::INTEGER);
+    CHECK_EQ(nd.type(1), DataType::STRING);
+    CHECK_EQ(nd.type(2), DataType::INTEGER);
+    CHECK_EQ(nd.type(3), DataType::BOOLEAN);
+    CHECK_EQ(nd.type(4), DataType::ENUM);
+    CHECK_EQ(nd.type(5), DataType::FLOATING_POINT);
+    
+    CHECK_EQ(nd.type("ID"), DataType::INTEGER);
+    CHECK_EQ(nd.type("NAME"), DataType::STRING);
+    CHECK_EQ(nd.type("AGE"), DataType::INTEGER);
+    CHECK_EQ(nd.type("SEX"), DataType::BOOLEAN);
+    CHECK_EQ(nd.type("CLASS"), DataType::ENUM);
+    CHECK_EQ(nd.type("GRADE"), DataType::FLOATING_POINT);
+
     // ID
     CHECK_EQ(nd.cell(0, 0), 0.0);
     CHECK_EQ(nd.cell(1, 0), 0.2);

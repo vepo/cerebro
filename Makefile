@@ -4,6 +4,7 @@ CXXFLAGS        := --coverage
 BUILD           := ./build
 OBJ_DIR         := $(BUILD)/objects
 APP_DIR         := $(BUILD)/apps
+COV_DIR         := $(BUILD)/coverage-report
 INCLUDE         := -Iinclude/
 SRC             := $(wildcard src/*/*.cpp)
 
@@ -59,9 +60,13 @@ clean-doctest:
 coverage: test
 	./test-coverage.sh
 
+coverage-report: coverage
+	genhtml main_coverage.info --output-directory $(COV_DIR)
+
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
+	-@rm -rvf $(COV_DIR)
 	-@find . -name '*.gcov'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcno'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcda'      -exec rm -rv -- '{}' +

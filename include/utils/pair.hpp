@@ -1,11 +1,10 @@
 #pragma once
 
-template <class T>
-class Pair
+template <class TYPE> class Pair
 {
 public:
-    Pair(T f, T s) : first(f), second(s) {}
+    Pair(TYPE f, TYPE s) : first(f), second(s) {};
 
-    T first;
-    T second;
+    TYPE first;
+    TYPE second;
 };

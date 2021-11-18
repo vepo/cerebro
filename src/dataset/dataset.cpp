@@ -116,7 +116,7 @@ Dataset Dataset::split(const std::vector<int> &colums)
 Pair<Dataset> Dataset::split(double ratio)
 {
     std::vector<int> indexes;
-    while (indexes.size() < (int)(this->contents.size() * ratio))
+    while (indexes.size() < (int)std::round(this->contents.size() * ratio))
     {
         int selectedIndex = Random::randomInteger() % this->contents.size();
         if (std::find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
@@ -129,7 +129,7 @@ Pair<Dataset> Dataset::split(double ratio)
     std::vector<std::vector<std::string>> secondContents;
     for (int i = 0; i < this->contents.size(); ++i)
     {
-        if (std::find(indexes.begin(), indexes.end(), i) == indexes.end())
+        if (std::find(indexes.begin(), indexes.end(), i) != indexes.end())
         {
             firstContents.emplace_back(this->contents[i]);
         }

@@ -1,23 +1,24 @@
 #include "nn/multi-layer-perceptron.hpp"
+#include <iostream>
 
 MultiLayerPerceptron::MultiLayerPerceptron(std::vector<int> layers,
                                            double bias,
-                                           double eta)
+                                           double learning_rate,
+                                           double momentum) : layers(layers),
+                                                              bias(bias),
+                                                              learning_rate(learning_rate),
+                                                              momentum(momentum)
 {
-    this->layers = layers;
-    this->bias = bias;
-    this->eta = eta;
-
     for (size_t i = 0; i < layers.size(); ++i)
     {
-        values.push_back(std::vector<double>(layers[i], 0.0));
-        d.push_back(std::vector<double>(layers[i], 0.0));
-        network.push_back(std::vector<Perceptron>());
+        values.emplace_back(std::vector<double>(layers[i], 0.0));
+        network_error.emplace_back(std::vector<double>(layers[i], 0.0));
+        network.emplace_back();
         if (i > 0)
         {
             for (int j = 0; j < layers[i]; ++j)
             {
-                network[i].push_back(Perceptron(layers[i - 1], bias));
+                network[i].emplace_back(Perceptron(layers[i - 1], bias));
             }
         }
     }
@@ -85,7 +86,7 @@ double MultiLayerPerceptron::bp(std::vector<double> x, std::vector<double> y)
     // STEP 3: Calculate the output error terms
     for (size_t i = 0; i < output.size(); ++i)
     {
-        d.back()[i] = output[i] * (1 - output[i]) * (error[i]);
+        network_error.back()[i] = output[i] * (1 - output[i]) * (error[i]);
     }
 
     // STEP 4: Calculate the error term of each unit on each layer
@@ -96,9 +97,9 @@ double MultiLayerPerceptron::bp(std::vector<double> x, std::vector<double> y)
             double fwd_error = 0.0;
             for (int k = 0; k < layers[i + 1]; ++k)
             {
-                fwd_error += network[i + 1][k].weights[h] * d[i + 1][k];
+                fwd_error += network[i + 1][k].weights[h] * network_error[i + 1][k];
             }
-            d[i][h] = values[i][h] * (1 - values[i][h]) * fwd_error;
+            network_error[i][h] = values[i][h] * (1 - values[i][h]) * fwd_error;
         }
     }
 
@@ -112,11 +113,11 @@ double MultiLayerPerceptron::bp(std::vector<double> x, std::vector<double> y)
                 double delta;
                 if (k == layers[i - 1])
                 {
-                    delta = eta * d[i][j] * bias;
+                    delta = learning_rate * momentum * network_error[i][j] * bias;
                 }
                 else
                 {
-                    delta = eta * d[i][j] * values[i - 1][k];
+                    delta = learning_rate * momentum * network_error[i][j] * values[i - 1][k];
                 }
                 network[i][j].weights[k] += delta;
             }

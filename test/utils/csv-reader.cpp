@@ -38,6 +38,9 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "CLASS");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "GRADE");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
         CHECK_EQ(reader.nextToken(), "1");
@@ -54,8 +57,10 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "C");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "10");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
-        
 
         CHECK_EQ(reader.nextToken(), "2");
         CHECK(reader.hasNextToken());
@@ -70,6 +75,9 @@ TEST_CASE("Reading CSV")
         CHECK(reader.hasNextToken());
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "A");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "7.5");
         CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
@@ -87,6 +95,9 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "B");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "5");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
         CHECK_EQ(reader.nextToken(), "4");
@@ -102,6 +113,9 @@ TEST_CASE("Reading CSV")
         CHECK(reader.hasNextToken());
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "A");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "2");
         CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
@@ -119,6 +133,9 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "B");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "6.6");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
         CHECK_EQ(reader.nextToken(), "6");
@@ -134,6 +151,9 @@ TEST_CASE("Reading CSV")
         CHECK(reader.hasNextToken());
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "C");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "9.1");
         CHECK_FALSE(reader.hasNextToken());
         CHECK(reader.endOfLine());
     }
