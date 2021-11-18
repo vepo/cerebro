@@ -41,6 +41,10 @@ TEST_CASE("MultiLayerPerceptron")
             MSE += xorPerceptron.bp({1, 0}, {1});
             MSE += xorPerceptron.bp({1, 1}, {0});
             MSE = MSE / 4.0;
+            if (i % 100 == 0)
+            {
+                std::cout << "MSE: " << MSE << std::endl;
+            }
         }
 
         CHECK_EQ(doctest::Approx(MSE).epsilon(0.3), 0.0);

@@ -5,6 +5,7 @@
 class Random
 {
 public:
+    static double randomDouble();
     static int randomInteger();
     static int randomInteger(int maxExclusive);
     template <class T>
