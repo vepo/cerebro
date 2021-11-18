@@ -1,5 +1,6 @@
 CXX             := -c++
 LDFLAGS         := -L/usr/lib -lstdc++ -lm
+CXXFLAGS        := -fprofile-arcs -ftest-coverage 
 BUILD           := ./build
 OBJ_DIR         := $(BUILD)/objects
 APP_DIR         := $(BUILD)/apps
@@ -54,6 +55,9 @@ test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 
 clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
+
+coverage:
+	lcov --coverage --directory . --output-file main_coverage.info
 
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
