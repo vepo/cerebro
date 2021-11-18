@@ -16,6 +16,7 @@ DEPENDENCIES    := $(OBJECTS:.o=.d)
 
 
 TESTS           := $(wildcard test/*.cpp test/*/*.cpp)
+TEST_REPORT     := $(BUILD)/tests.xml
 
 DOCTEST_VERSION := 2.4.6
 DOCTEST_DIR     := $(BUILD)/doctest
@@ -55,7 +56,7 @@ $(DOCTEST_DIR):
 
 test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 	$(CXX) $(CXXFLAGS) $(DOCTEST_INCLUDE) $(INCLUDE) $(TESTS) $(OBJECTS) -o $(BUILD)/tests $(LDFLAGS)
-	$(BUILD)/tests
+	$(BUILD)/tests --out=$(TEST_REPORT) --reporters=junit
 
 clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
@@ -70,6 +71,7 @@ clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
 	-@rm -rvf $(COV_DIR)
+	-@rm -rvf $(TEST_REPORT)
 	-@find . -name '*.gcov'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcno'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcda'      -exec rm -rv -- '{}' +
