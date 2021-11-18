@@ -32,6 +32,12 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "AGE");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "SEX");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "CLASS");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
         CHECK_EQ(reader.nextToken(), "1");
@@ -42,7 +48,14 @@ TEST_CASE("Reading CSV")
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "38");
         CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "M");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "C");
+        CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
+        
 
         CHECK_EQ(reader.nextToken(), "2");
         CHECK(reader.hasNextToken());
@@ -51,6 +64,12 @@ TEST_CASE("Reading CSV")
         CHECK(reader.hasNextToken());
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "24");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "F");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "A");
         CHECK(reader.hasNextToken());
         CHECK(reader.endOfLine());
 
@@ -61,6 +80,60 @@ TEST_CASE("Reading CSV")
         CHECK(reader.hasNextToken());
         CHECK_FALSE(reader.endOfLine());
         CHECK_EQ(reader.nextToken(), "75");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "M");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "B");
+        CHECK(reader.hasNextToken());
+        CHECK(reader.endOfLine());
+
+        CHECK_EQ(reader.nextToken(), "4");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "Carol");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "32");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "F");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "A");
+        CHECK(reader.hasNextToken());
+        CHECK(reader.endOfLine());
+
+        CHECK_EQ(reader.nextToken(), "5");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "Dan");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "14");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "M");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "B");
+        CHECK(reader.hasNextToken());
+        CHECK(reader.endOfLine());
+
+        CHECK_EQ(reader.nextToken(), "6");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "Erin");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "76");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "M");
+        CHECK(reader.hasNextToken());
+        CHECK_FALSE(reader.endOfLine());
+        CHECK_EQ(reader.nextToken(), "C");
         CHECK_FALSE(reader.hasNextToken());
         CHECK(reader.endOfLine());
     }

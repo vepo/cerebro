@@ -2,11 +2,13 @@
 #include <sstream>
 #include <algorithm>
 #include <regex>
+#include <random>
 #include "utils/string-utils.hpp"
 
 #include "dataset/dataset.hpp"
 #include "utils/csv-reader.hpp"
 #include "utils/debug.hpp"
+#include "utils/random.hpp"
 
 Dataset::Dataset(std::string const &path)
 {
@@ -118,7 +120,7 @@ Pair<Dataset> Dataset::split(double ratio)
     std::vector<int> indexes;
     while (indexes.size() < (int)(this->contents.size() * ratio))
     {
-        int selectedIndex = rand() % this->contents.size();
+        int selectedIndex = Random::randomInteger() % this->contents.size();
         if (std::find(indexes.begin(), indexes.end(), selectedIndex) == indexes.end())
         {
             indexes.emplace_back(selectedIndex);

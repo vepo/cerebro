@@ -25,7 +25,13 @@ public:
 
 private:
     std::vector<double> normalizeInteger(std::vector<std::vector<std::string>> contents, int col);
+    std::vector<double> normalizeEnum(std::vector<std::vector<std::string>> contents, int col);
+    std::vector<double> normalizeFloatingPoint(std::vector<std::vector<std::string>> contents, int col);
+    std::vector<double> normalizeBoolean(std::vector<std::vector<std::string>> contents, int col);
+    int colIndex(std::string colName);
     std::vector<std::string> names;
     std::vector<std::vector<double>> contents;
     std::vector<DataType> types;
+    std::vector<std::string> TRUE_VALUES = {"t", "true", "s", "sim"};
+    std::vector<std::string> FALSE_VALUES = {"f", "false", "n", "não", "nao"};
 };

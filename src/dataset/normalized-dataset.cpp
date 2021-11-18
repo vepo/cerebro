@@ -2,7 +2,7 @@
 #include <iostream>
 #include <regex>
 #include <set>
-#include <bits/stdc++.h>
+#include <limits>
 #include <string>
 
 /**
@@ -19,15 +19,14 @@
 NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
                                      std::vector<std::vector<std::string>> contents)
 {
+    this->names = names;
     std::regex integerPattern("\\s*-?\\s*[0-9]+\\s*");
     std::regex floatingPointPattern("\\s*-?\\s*[0-9]*\\.[0-9]+\\s*");
     std::regex enumPattern("\\s*[A-Za-z0-9\\s]+\\s*");
 
-    std::vector<DataType> types;
     for (int column = 0; column < names.size(); column++)
     {
         DataType supposedType = DataType::INTEGER;
-        std::cout << "Column: " << column << std::endl;
         std::set<std::string> uniqueValues;
         for (int row = 0; row < contents.size(); row++)
         {
@@ -37,44 +36,92 @@ NormalizedDataset::NormalizedDataset(std::vector<std::string> names,
                 if (supposedType == DataType::INTEGER &&
                     regex_match(contents[row][column], integerPattern))
                 {
-                    std::cout << "Integer found: " << contents[row][column] << std::endl;
+                    continue;
                 }
                 else if ((supposedType == DataType::INTEGER || supposedType == DataType::FLOATING_POINT) &&
                          regex_match(contents[row][column], floatingPointPattern))
                 {
                     supposedType = DataType::FLOATING_POINT;
-                    std::cout << "Floating Point found: " << contents[row][column] << std::endl;
                 }
                 else if (regex_match(contents[row][column], enumPattern))
                 {
                     supposedType = DataType::ENUM;
-                    std::cout << "Enum found: " << contents[row][column] << std::endl;
-                }
-                else
-                {
-                    std::cout << "No Pattern found: " << contents[row][column] << std::endl;
                 }
             }
         }
+        if (supposedType == DataType::ENUM && uniqueValues.size() <= 2)
+        {
+            supposedType = DataType::BOOLEAN;
+        }
+        else if (supposedType == DataType::ENUM && uniqueValues.size() > contents.size() / 2)
+        {
+            supposedType = DataType::STRING;
+        }
+
+        this->types.emplace_back(supposedType);
 
         switch (supposedType)
         {
+        case DataType::STRING:
+            this->contents.emplace_back(std::vector<double>());
+            break;
         case DataType::INTEGER:
             this->contents.emplace_back(normalizeInteger(contents, column));
+            break;
+        case DataType::FLOATING_POINT:
+            this->contents.emplace_back(normalizeFloatingPoint(contents, column));
+            break;
+        case DataType::ENUM:
+            this->contents.emplace_back(normalizeEnum(contents, column));
+            break;
+        case DataType::BOOLEAN:
+            this->contents.emplace_back(normalizeBoolean(contents, column));
+            break;
+        case DataType::TEXT:
+            this->contents.emplace_back(std::vector<double>());
+            break;
         }
+    }
+}
+
+int NormalizedDataset::colIndex(std::string colName)
+{
+    auto it = std::find(this->names.begin(), this->names.end(), colName);
+    if (it != this->names.end())
+    {
+        return it - this->names.begin();
+    }
+    else
+    {
+        return -1;
     }
 }
 
 double NormalizedDataset::cell(int row,
                                int col)
 {
-    return 0.0;
+    if (contents.size() > col && contents[col].size() > row)
+    {
+        return contents[col][row];
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 double NormalizedDataset::cell(int row,
                                std::string colName)
 {
-    return 0.0;
+    int colIndex = this->colIndex(colName);
+    if (colIndex >= 0 && contents.size() > colIndex && contents[colIndex].size() > row)
+    {
+        return contents[colIndex][row];
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 DataType NormalizedDataset::type(int col)
@@ -98,8 +145,8 @@ DataType NormalizedDataset::type(std::string colName)
 std::vector<double> NormalizedDataset::normalizeInteger(std::vector<std::vector<std::string>> contents,
                                                         int col)
 {
-    int minInteger = INT_MAX;
-    int maxInteger = INT_MIN;
+    int min = std::numeric_limits<int>::max();
+    int max = std::numeric_limits<int>::min();
     std::vector<int> values;
     for (int row = 0; row < contents.size(); ++row)
     {
@@ -107,24 +154,125 @@ std::vector<double> NormalizedDataset::normalizeInteger(std::vector<std::vector<
 
         values.emplace_back(value);
 
-        if (value > maxInteger)
+        if (value > max)
         {
-            maxInteger = value;
+            max = value;
         }
 
-        if (value < minInteger)
+        if (value < min)
         {
-            minInteger = value;
+            min = value;
         }
     }
 
     std::vector<double> normalizedValues;
     for (int row = 0; row < contents.size(); ++row)
     {
-        double nValue = ((double)values[row] - (double)minInteger) /
-                        ((double)maxInteger - (double)minInteger);
-        std::cout << "Value: " << values[row] << " -> " << nValue << std::endl;
-        normalizedValues.emplace_back(nValue);
+        normalizedValues.emplace_back(((double)values[row] - (double)min) /
+                                      ((double)max - (double)min));
+    }
+    return normalizedValues;
+}
+
+std::vector<double> NormalizedDataset::normalizeEnum(std::vector<std::vector<std::string>> contents, int col)
+{
+    std::vector<std::string> loadedValues;
+    std::vector<int> values;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        auto index = std::find(loadedValues.begin(), loadedValues.end(), contents[row][col]);
+        if (index == loadedValues.end())
+        {
+            values.emplace_back(loadedValues.size());
+            loadedValues.emplace_back(contents[row][col]);
+        }
+        else
+        {
+            values.emplace_back(index - loadedValues.begin());
+        }
+    }
+    std::vector<double> normalizedValues;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        normalizedValues.emplace_back((double)values[row] /
+                                      ((double)loadedValues.size() - (double)1));
+    }
+    return normalizedValues;
+}
+
+std::vector<double> NormalizedDataset::normalizeFloatingPoint(std::vector<std::vector<std::string>> contents, int col)
+{
+    double min = std::numeric_limits<double>::max();
+    double max = std::numeric_limits<double>::min();
+    std::vector<double> values;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        double value = std::stod(contents[row][col]);
+
+        values.emplace_back(value);
+
+        if (value > max)
+        {
+            max = value;
+        }
+
+        if (value < min)
+        {
+            min = value;
+        }
+    }
+
+    std::vector<double> normalizedValues;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        normalizedValues.emplace_back(((double)values[row] - (double)min) /
+                                      ((double)max - (double)min));
+    }
+    return normalizedValues;
+}
+
+std::vector<double> NormalizedDataset::normalizeBoolean(std::vector<std::vector<std::string>> contents, int col)
+{
+    std::string trueValue;
+    std::string falseValue;
+
+    std::vector<bool> values;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        std::string value = contents[row][col];
+        if (!trueValue.empty() && trueValue == value)
+        {
+            values.emplace_back(true);
+        }
+        else if (!falseValue.empty() && falseValue == value)
+        {
+            values.emplace_back(false);
+        }
+        else if (std::find(TRUE_VALUES.begin(), TRUE_VALUES.end(), value) != TRUE_VALUES.end())
+        {
+            trueValue = value;
+            values.emplace_back(true);
+        }
+        else if (std::find(FALSE_VALUES.begin(), FALSE_VALUES.end(), value) != FALSE_VALUES.end())
+        {
+            falseValue = value;
+            values.emplace_back(false);
+        }
+        else if (trueValue.empty())
+        {
+            trueValue = value;
+            values.emplace_back(true);
+        }
+        else
+        {
+            falseValue = value;
+            values.emplace_back(false);
+        }
+    }
+    std::vector<double> normalizedValues;
+    for (int row = 0; row < contents.size(); ++row)
+    {
+        normalizedValues.emplace_back(values[row] ? 1.0 : 0.0);
     }
     return normalizedValues;
 }
