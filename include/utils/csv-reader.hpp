@@ -8,7 +8,6 @@ class CSVReader
 {
 public:
     explicit CSVReader(std::string path);
-    ~CSVReader();
     std::string nextToken();
     bool hasNextToken();
     bool endOfLine();
@@ -20,8 +19,8 @@ public:
 
 private:
     std::string process_line(std::smatch lineMatch);
-    bool eol;
-    std::ifstream *input;
-    std::smatch *match;
-    std::string buffer;
+    bool _eol;
+    std::ifstream _input;
+    std::smatch _match;
+    std::string _buffer;
 };

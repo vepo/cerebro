@@ -2,9 +2,7 @@
 
 #include <random>
 
-std::random_device rd;
-std::mt19937 mt(rd());
-
+std::mt19937 mt(std::random_device{}());
 std::uniform_int_distribution<int> integerDist(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 std::uniform_real_distribution<double> doubleDist(-1.0, 1.0);
 

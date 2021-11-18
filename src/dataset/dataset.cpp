@@ -93,7 +93,7 @@ Dataset Dataset::split(const std::vector<int> &colums)
 {
     std::vector<std::string> splitedColumnNames;
     std::vector<std::vector<std::string>> splitedContents;
-    auto initialize_row = [=, &splitedContents](auto &__)
+    auto initialize_row = [=, &splitedContents]([[maybe_unused]] auto &__)
     { splitedContents.emplace_back(); };
     std::for_each(_contents.cbegin(), _contents.cend(), initialize_row);
 

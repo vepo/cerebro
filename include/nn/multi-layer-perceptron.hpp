@@ -16,6 +16,7 @@ public:
     std::vector<double> run(std::vector<double> x);
     double bp(std::vector<double> x, std::vector<double> y);
 
+private:
     std::vector<int> layers;
     double bias;
     double learning_rate;

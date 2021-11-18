@@ -67,7 +67,7 @@ NormalizedDataset::NormalizedDataset(const std::vector<std::string> &names,
         switch (supposedType)
         {
         case DataType::STRING:
-            _contents.emplace_back(std::vector<double>());
+            _contents.emplace_back();
             break;
         case DataType::INTEGER:
             _contents.emplace_back(normalizeInteger(contents, column));
@@ -82,7 +82,7 @@ NormalizedDataset::NormalizedDataset(const std::vector<std::string> &names,
             _contents.emplace_back(normalizeBoolean(contents, column));
             break;
         case DataType::TEXT:
-            _contents.emplace_back(std::vector<double>());
+            _contents.emplace_back();
             break;
         }
     }
@@ -93,7 +93,7 @@ int NormalizedDataset::colIndex(const std::string &colName)
     auto it = std::find(_names.begin(), _names.end(), colName);
     if (it != _names.end())
     {
-        return it - _names.begin();
+        return (int)(it - _names.begin());
     }
     else
     {

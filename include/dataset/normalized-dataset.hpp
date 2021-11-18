@@ -24,10 +24,10 @@ public:
     DataType type(const std::string &colName);
 
 private:
-    std::vector<double> normalizeInteger(const std::vector<std::vector<std::string>> &contents, int col);
-    std::vector<double> normalizeEnum(const std::vector<std::vector<std::string>> &contents, int col);
-    std::vector<double> normalizeFloatingPoint(const std::vector<std::vector<std::string>> &contents, int col);
-    std::vector<double> normalizeBoolean(const std::vector<std::vector<std::string>> &contents, int col);
+    static std::vector<double> normalizeInteger(const std::vector<std::vector<std::string>> &contents, int col);
+    static std::vector<double> normalizeEnum(const std::vector<std::vector<std::string>> &contents, int col);
+    static std::vector<double> normalizeFloatingPoint(const std::vector<std::vector<std::string>> &contents, int col);
+    static std::vector<double> normalizeBoolean(const std::vector<std::vector<std::string>> &contents, int col);
     int colIndex(const std::string &colName);
     std::vector<std::string> _names;
     std::vector<std::vector<double>> _contents;

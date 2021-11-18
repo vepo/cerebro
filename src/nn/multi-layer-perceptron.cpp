@@ -108,19 +108,11 @@ double MultiLayerPerceptron::bp(std::vector<double> x, std::vector<double> y)
     {
         for (int j = 0; j < layers[i]; ++j)
         {
-            for (int k = 0; k < layers[i - 1] + 1; ++k)
+            for (int k = 0; k < layers[i - 1]; ++k)
             {
-                double delta;
-                if (k == layers[i - 1])
-                {
-                    delta = learning_rate * momentum * network_error[i][j] * bias;
-                }
-                else
-                {
-                    delta = learning_rate * momentum * network_error[i][j] * values[i - 1][k];
-                }
-                network[i][j].weights[k] += delta;
+                network[i][j].weights[k] += learning_rate * momentum * network_error[i][j] * values[i - 1][k];
             }
+            network[i][j].weights[layers[i - 1]] += learning_rate * momentum * network_error[i][j] * bias;
         }
     }
     return MSE;
