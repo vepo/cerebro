@@ -16,7 +16,7 @@ DEPENDENCIES    := $(OBJECTS:.o=.d)
 
 
 TESTS           := $(wildcard test/*.cpp test/*/*.cpp)
-TEST_REPORT     := $(BUILD)/tests.xml
+TEST_REPORT     := $(BUILD)/test-report/tests.xml
 
 DOCTEST_VERSION := 2.4.6
 DOCTEST_DIR     := $(BUILD)/doctest

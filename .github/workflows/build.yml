@@ -40,5 +40,5 @@ jobs:
         run: |
           sonar-scanner -Dsonar.host.url="${{ env.SONAR_SERVER_URL }}" \
                         -Dsonar.branch.name=${BASE_BRANCH} \
-                        -Dsonar.cfamily.cppunit.reportsPath=build/tests.xml \
+                        -Dsonar.cfamily.cppunit.reportsPath=build/test-report \
                         -Dsonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
