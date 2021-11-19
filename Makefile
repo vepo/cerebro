@@ -56,7 +56,7 @@ $(DOCTEST_DIR):
 
 test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 	$(CXX) $(CXXFLAGS) $(DOCTEST_INCLUDE) $(INCLUDE) $(TESTS) $(OBJECTS) -o $(BUILD)/tests $(LDFLAGS)
-	$(BUILD)/tests --out=$(TEST_REPORT) --reporters=junit
+	$(BUILD)/tests ## --out=$(TEST_REPORT) --reporters=junit
 
 clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
