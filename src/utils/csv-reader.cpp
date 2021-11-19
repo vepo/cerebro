@@ -36,12 +36,20 @@ std::string CSVReader::nextToken()
 {
     if (_input.is_open())
     {
-        if (_buffer.empty())
+        while (_buffer.empty() || (_buffer.find('\n') == std::string::npos &&
+                                   _buffer.find(',') == std::string::npos))
         {
             char readBuffer[1024] = {};
-            if (_input.readsome(readBuffer, 1024) > 0)
+            _input.read(readBuffer, 1024);
+            size_t size = _input.gcount();
+            if (size > 0)
             {
+                readBuffer[size] = '\0';
                 _buffer.append(readBuffer);
+            }
+            if (!_input)
+            {
+                break;
             }
         }
     }

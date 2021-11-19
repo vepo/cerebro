@@ -22,6 +22,7 @@ public:
     double cell(int row, const std::string &colName);
     DataType type(int col);
     DataType type(const std::string &colName);
+    std::vector<double> rowData(int row);
 
 private:
     static std::vector<double> normalizeInteger(const std::vector<std::vector<std::string>> &contents, int col);

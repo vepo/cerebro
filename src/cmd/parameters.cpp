@@ -10,7 +10,7 @@ Parameters Parameters::parse(std::vector<std::string> argv)
     std::vector<std::string> inputNames;
     std::vector<std::string> outputNames;
     std::vector<int> layers;
-
+    int epochs = -1;
     for (size_t index = 0; index < argv.size(); ++index)
     {
         if ((argv[index] == "-o" || argv[index] == "--output-file") &&
@@ -55,23 +55,36 @@ Parameters Parameters::parse(std::vector<std::string> argv)
             }
             ++index;
         }
+        else if ((argv[index] == "-e" || argv[index] == "--epochs") &&
+                 index + 1 < argv.size())
+        {
+            epochs = std::stoi(argv[index + 1]);
+            ++index;
+        }
         else
         {
             std::cerr << "Unknown parameter: " << argv[index] << std::endl;
         }
     }
 
-    return Parameters(outpuFile, datasetFile, inputNames, outputNames, layers);
+    return Parameters(outpuFile,
+                      datasetFile,
+                      inputNames,
+                      outputNames,
+                      layers,
+                      epochs);
 }
 
 Parameters::Parameters(const std::string &outpuFile,
                        const std::string &datasetFile,
                        const std::vector<std::string> &inputNames,
                        const std::vector<std::string> &outputNames,
-                       const std::vector<int> &layers) : _outpuFile(outpuFile),
-                                                         _datasetFile(datasetFile),
-                                                         _inputNames(inputNames),
-                                                         _outputNames(outputNames),
-                                                         _layers(layers)
+                       const std::vector<int> &layers,
+                       int epochs) : _outpuFile(outpuFile),
+                                     _datasetFile(datasetFile),
+                                     _inputNames(inputNames),
+                                     _outputNames(outputNames),
+                                     _layers(layers),
+                                     _epochs(epochs)
 {
 }

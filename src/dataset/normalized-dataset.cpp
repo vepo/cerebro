@@ -130,6 +130,16 @@ double NormalizedDataset::cell(int row,
     }
 }
 
+std::vector<double> NormalizedDataset::rowData(int row)
+{
+    std::vector<double> data;
+    for (size_t col = 0; col < _contents.size(); ++col)
+    {
+        data.emplace_back(_contents[col][row]);
+    }
+    return data;
+}
+
 DataType NormalizedDataset::type(int col)
 {
     return _types[col];

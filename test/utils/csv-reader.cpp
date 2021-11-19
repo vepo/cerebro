@@ -2,6 +2,7 @@
 
 #include "utils/csv-reader.hpp"
 #include <regex>
+
 TEST_CASE("Reading CSV")
 {
     SUBCASE("REGEX")
@@ -291,5 +292,34 @@ TEST_CASE("Reading CSV")
         CHECK_EQ(reader.nextToken(), "75");
         CHECK_FALSE(reader.hasNextToken());
         CHECK(reader.endOfLine());
+    }
+}
+
+#include <iostream>
+
+TEST_CASE("Load big CSV")
+{
+    CSVReader reader("./data/forest-fires/forestfires.csv");
+
+    for (int row = 0; row < 518; ++row)
+    {
+        for (int col = 0; col < 12; ++col)
+        {
+            REQUIRE_MESSAGE(reader.hasNextToken(), "Check hasNextToken (", row, ",", col, ")");
+            std::string token = reader.nextToken();
+            REQUIRE_MESSAGE(token.size() > 0, "Check token (", row, ",", col, "): ", token);
+            REQUIRE_FALSE_MESSAGE(reader.endOfLine(), "CHECK endOfLine (", row, ",", col, ")");
+        }
+        std::string token = reader.nextToken();
+        REQUIRE_MESSAGE(token.size() > 0, "Check token (", row, ",", 13, "): ", token);
+        if (row == 517)
+        {
+            REQUIRE_FALSE_MESSAGE(reader.hasNextToken(), "Check hasNextToken (", row, ",", 13, ")");
+        }
+        else
+        {
+            REQUIRE_MESSAGE(reader.hasNextToken(), "Check hasNextToken (", row, ",", 13, ")");
+        }
+        REQUIRE_MESSAGE(reader.endOfLine(), "CHECK endOfLine (", row, ",", 13, ")");
     }
 }
