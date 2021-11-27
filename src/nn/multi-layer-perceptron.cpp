@@ -1,5 +1,6 @@
 #include "nn/multi-layer-perceptron.hpp"
 #include <iostream>
+#include <iomanip>
 
 MultiLayerPerceptron::MultiLayerPerceptron(std::vector<int> layers,
                                            double bias,
@@ -45,7 +46,7 @@ void MultiLayerPerceptron::print_weights()
             std::cout << "Layer " << i + 1 << " Neuron " << j << ": ";
             for (auto &it : network[i][j].weights)
             {
-                std::cout << it << "\t";
+                std::cout << std::setw(10) << std::setprecision(5) << it << "  ";
             }
             std::cout << std::endl;
         }

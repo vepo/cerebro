@@ -1,6 +1,7 @@
 #include "nn/multi-layer-perceptron-trainer.hpp"
 #include "nn/multi-layer-perceptron.hpp"
 #include <iostream>
+#include <iomanip>
 
 MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(const Dataset &dataset,
                                                                      std::vector<std::string> xNames,
@@ -43,6 +44,8 @@ void print_vector(std::string paramName, std::vector<T> v)
     std::cout << "}" << std::endl;
 }
 
+#include <limits>
+
 void MultiLayerPerceptronTrainer::train()
 {
     Pair<Dataset> trainPair = params.dataset.split(params.testSize + params.validationSize);
@@ -71,7 +74,12 @@ void MultiLayerPerceptronTrainer::train()
     MultiLayerPerceptron mlp = MultiLayerPerceptron(params.layers);
     NormalizedDataset trainInput = trainDataset.split(params.xNames).normalize();
     NormalizedDataset trainOutput = trainDataset.split(params.yNames).normalize();
+
+    NormalizedDataset testInput = testDataset.split(params.xNames).normalize();
+    NormalizedDataset testOutput = testDataset.split(params.yNames).normalize();
+
     double MSE;
+    double lastTestError = std::numeric_limits<double>::max();
     for (int epoch = 0; epoch < params.epochs; ++epoch)
     {
         MSE = 0.0;
@@ -82,15 +90,41 @@ void MultiLayerPerceptronTrainer::train()
         MSE = MSE / (double)trainDataset.rows();
         if (epoch % 100 == 0)
         {
-            std::cout << "MSE = " << MSE << std::endl;
+            double testError = MultiLayerPerceptronTrainer::MSE(&mlp, testInput, testOutput);
+            if (testError > lastTestError)
+            {
+                std::cout << "Warning: error is increasing... delta=" << std::setw(10) << std::setprecision(5) << (testError - lastTestError) << std::endl;
+            }
+            std::cout << "Testing  MSE = " << std::setw(10) << std::setprecision(5) << MSE << std::endl;
+            std::cout << "Training MSE = " << std::setw(10) << std::setprecision(5) << testError << std::endl;
+            lastTestError = testError;
         }
     }
-    std::cout << __LINE__ << std::endl
-              << std::flush;
+
     std::cout << std::endl
               << std::endl
               << "Trained weights (Compare to hard-coded weights):"
               << std::endl
               << std::endl;
     mlp.print_weights();
+}
+
+double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptron *mlp,
+                                        const NormalizedDataset &input,
+                                        const NormalizedDataset &output)
+{
+    double MSE = 0.0;
+    for (int row = 0; row < input.rows(); ++row)
+    {
+        std::vector<double> expectedResult = output.rowData(row);
+        std::vector<double> result = mlp->run(input.rowData(row));
+        double localError = 0.0;
+        for (size_t j = 0; j < result.size(); ++j)
+        {
+            double delta = result[j] - expectedResult[j];
+            localError += delta * delta;
+        }
+        MSE += localError;
+    }
+    return MSE / input.rows();
 }

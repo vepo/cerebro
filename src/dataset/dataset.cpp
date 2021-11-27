@@ -132,7 +132,6 @@ Pair<Dataset> Dataset::split(double ratio) const
     std::vector<std::vector<std::string>> secondContents;
     for (int i = 0; i < _contents.size(); ++i)
     {
-        std::cout << "Row size= " << _contents[i].size() << std::endl;
         if (std::find(indexes.begin(), indexes.end(), i) != indexes.end())
         {
             firstContents.emplace_back(_contents[i]);

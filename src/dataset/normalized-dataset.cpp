@@ -130,7 +130,7 @@ double NormalizedDataset::cell(int row,
     }
 }
 
-std::vector<double> NormalizedDataset::rowData(int row)
+std::vector<double> NormalizedDataset::rowData(int row) const
 {
     std::vector<double> data;
     for (size_t col = 0; col < _contents.size(); ++col)
