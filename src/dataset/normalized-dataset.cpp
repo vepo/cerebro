@@ -82,6 +82,7 @@ NormalizedDataset::NormalizedDataset(const std::vector<std::string> &names,
             _contents.emplace_back(normalizeBoolean(contents, column));
             break;
         case DataType::TEXT:
+        default:
             _contents.emplace_back();
             break;
         }

@@ -75,8 +75,6 @@ std::string Dataset::cell(int row, const std::string &colName)
     }
 }
 
-#include <iostream>
-
 Dataset Dataset::split(const std::vector<std::string> &columnNames) const
 {
     std::vector<int> columns;
