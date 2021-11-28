@@ -9,6 +9,7 @@ _Cérebro_ means brain in portuguese. The porpuse of this project is build some 
     - [X] Multi Layer Perceptron
     - [X] Backpropagation
     - [X] Backpropagation + Momentum
+    - [X] Backpropagation + Dropout
     - [ ] Backpropagation + Random Restart
 
 ## Building
