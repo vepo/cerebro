@@ -23,7 +23,7 @@ int main()
               << std::endl
               << std::endl;
     Perceptron *p = new Perceptron(2);
-    p->set_weights(OR_WEIGHTS);
+    p->setWeights(OR_WEIGHTS);
     std::cout << "Gate: " << std::endl;
     std::cout << p->run({0, 0}) << std::endl;
     std::cout << p->run({0, 1}) << std::endl;
@@ -36,9 +36,9 @@ int main()
               << std::endl
               << std::endl;
     MultiLayerPerceptron mlp = MultiLayerPerceptron({2, 2, 1});
-    mlp.set_weights({{NAND_WEIGHTS, OR_WEIGHTS}, {AND_WEIGHTS}});
+    mlp.setWeights({{NAND_WEIGHTS, OR_WEIGHTS}, {AND_WEIGHTS}});
     std::cout << "Hard-coded weights:\n";
-    mlp.print_weights();
+    mlp.printWeights();
 
     std::cout << "XOR:" << std::endl;
     std::cout << " 0 0 = " << mlp.run({0, 0})[0] << std::endl;
@@ -73,7 +73,7 @@ int main()
               << "Trained weights (Compare to hard-coded weights):"
               << std::endl
               << std::endl;
-    mlp.print_weights();
+    mlp.printWeights();
 
     std::cout << "XOR:" << std::endl;
     std::cout << " 0 0 = " << mlp.run({0, 0})[0] << std::endl;

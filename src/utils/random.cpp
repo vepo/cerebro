@@ -5,6 +5,7 @@
 std::mt19937 mt(std::random_device{}());
 std::uniform_int_distribution<int> integerDist(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 std::uniform_real_distribution<double> doubleDist(-1.0, 1.0);
+std::uniform_real_distribution<double> doublePositiveDist(0.0, 1.0);
 
 int Random::randomInteger()
 {
@@ -14,6 +15,11 @@ int Random::randomInteger()
 double Random::randomDouble()
 {
     return doubleDist(mt);
+}
+
+double Random::randomPositiveDouble()
+{
+    return doublePositiveDist(mt);
 }
 
 int Random::randomInteger(int maxExclusive)

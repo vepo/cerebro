@@ -1,7 +1,8 @@
 #include "nn/multi-layer-perceptron-trainer.hpp"
-#include "nn/multi-layer-perceptron.hpp"
+#include "nn/multi-layer-perceptron-trainee.hpp"
 #include <iostream>
 #include <iomanip>
+#include "utils/vt100.hpp"
 
 MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(const Dataset &dataset,
                                                                      std::vector<std::string> xNames,
@@ -55,8 +56,9 @@ void MultiLayerPerceptronTrainer::train()
             validationDataset = validationPair.first,
             testDataset = validationPair.second;
 
-    std::cout
-        << "-------------------------------------------------" << std::endl;
+    WindowSize size = VT100::getWindowSize();
+    VT100::clearScreen();
+    VT100::fillLine('-', size.cols);
     std::cout << std::endl;
     std::cout << "                Starting NN Train                " << std::endl;
     std::cout << std::endl;
@@ -70,8 +72,8 @@ void MultiLayerPerceptronTrainer::train()
     print_valuee("Test dataset size      ", testDataset.rows());
     print_valuee("Epocs                  ", params.epochs);
     std::cout << std::endl;
-    std::cout << "-------------------------------------------------" << std::endl;
-    MultiLayerPerceptron mlp = MultiLayerPerceptron(params.layers);
+    VT100::fillLine('-', size.cols);
+    MultiLayerPerceptronTrainee mlp = MultiLayerPerceptronTrainee(params.layers);
     NormalizedDataset trainInput = trainDataset.split(params.xNames).normalize();
     NormalizedDataset trainOutput = trainDataset.split(params.yNames).normalize();
 
@@ -80,36 +82,63 @@ void MultiLayerPerceptronTrainer::train()
 
     double MSE;
     double lastTestError = std::numeric_limits<double>::max();
+    double minTestError = std::numeric_limits<double>::max();
+    std::vector<std::vector<std::vector<double>>> minWeights;
     for (int epoch = 0; epoch < params.epochs; ++epoch)
     {
+        mlp.generateDropout();
         MSE = 0.0;
         for (int row = 0; row < trainDataset.rows(); ++row)
         {
             MSE += mlp.bp(trainInput.rowData(row), trainOutput.rowData(row));
         }
         MSE = MSE / (double)trainDataset.rows();
+
+        mlp.disableDropout();
+        double testError = MultiLayerPerceptronTrainer::MSE(&mlp, testInput, testOutput);
+        if (minTestError > testError)
+        {
+            minTestError = testError;
+            minWeights = mlp.get_weights();
+        }
+
         if (epoch % 100 == 0)
         {
-            double testError = MultiLayerPerceptronTrainer::MSE(&mlp, testInput, testOutput);
-            if (testError > lastTestError)
-            {
-                std::cout << "Warning: error is increasing... delta=" << std::setw(10) << std::setprecision(5) << (testError - lastTestError) << std::endl;
-            }
+            VT100::goTo({.y = 17, .x = 0});
+            std::cout << "Epoch        = " << epoch << std::endl
+                      << std::endl;
+            VT100::foregroundColor(Color::GREEN);
             std::cout << "Testing  MSE = " << std::setw(10) << std::setprecision(5) << MSE << std::endl;
             std::cout << "Training MSE = " << std::setw(10) << std::setprecision(5) << testError << std::endl;
+            if (testError - lastTestError > 0.01 * testError)
+            {
+                VT100::foregroundColor(Color::RED);
+                double errorPerCent = 100 * (testError - lastTestError) / lastTestError;
+                std::cout << "Warning: error is increasing... " << std::setw(10) << std::setprecision(5) << errorPerCent << "%" << std::endl;
+            }
+            else
+            {
+                VT100::eraseLine();
+            }
+            VT100::foregroundColor(Color::DEFAULT);
+            std::cout << std::endl;
             lastTestError = testError;
         }
     }
+
+    mlp.setWeights(minWeights);
+
+    std::cout << "MIN MSE: " << std::setw(10) << std::setprecision(5) << minTestError << std::endl;
 
     std::cout << std::endl
               << std::endl
               << "Trained weights (Compare to hard-coded weights):"
               << std::endl
               << std::endl;
-    mlp.print_weights();
+    mlp.printWeights();
 }
 
-double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptron *mlp,
+double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptronTrainee *mlp,
                                         const NormalizedDataset &input,
                                         const NormalizedDataset &output)
 {

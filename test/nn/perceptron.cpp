@@ -18,8 +18,7 @@ TEST_CASE("Perceptron")
 {
     SUBCASE("AND")
     {
-        Perceptron andPerceptron(2);
-        andPerceptron.set_weights(AND_WEIGHTS);
+        Perceptron andPerceptron(AND_WEIGHTS);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 0})).epsilon(0.1), 0.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 1})).epsilon(0.1), 0.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({1, 0})).epsilon(0.1), 0.0);
@@ -28,8 +27,7 @@ TEST_CASE("Perceptron")
 
     SUBCASE("OR")
     {
-        Perceptron andPerceptron(2);
-        andPerceptron.set_weights(OR_WEIGHTS);
+        Perceptron andPerceptron(OR_WEIGHTS);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 0})).epsilon(0.1), 0.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 1})).epsilon(0.1), 1.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({1, 0})).epsilon(0.1), 1.0);
@@ -38,8 +36,7 @@ TEST_CASE("Perceptron")
 
     SUBCASE("NAND")
     {
-        Perceptron andPerceptron(2);
-        andPerceptron.set_weights(NAND_WEIGHTS);
+        Perceptron andPerceptron(NAND_WEIGHTS);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 0})).epsilon(0.1), 1.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({0, 1})).epsilon(0.1), 1.0);
         CHECK_EQ(doctest::Approx(andPerceptron.run({1, 0})).epsilon(0.1), 1.0);

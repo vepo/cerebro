@@ -12,6 +12,11 @@ Perceptron::Perceptron(int inputs, double bias)
     std::generate(weights.begin(), weights.end(), Random::randomDouble);
 }
 
+Perceptron::Perceptron(std::vector<double> weights, double bias) : weights(weights),
+                                                                   bias(bias)
+{
+}
+
 double Perceptron::run(std::vector<double> x)
 {
     x.push_back(bias);
@@ -19,7 +24,7 @@ double Perceptron::run(std::vector<double> x)
     return sigmoid(sum);
 }
 
-void Perceptron::set_weights(std::vector<double> w_init)
+void Perceptron::setWeights(std::vector<double> w_init)
 {
     weights = w_init;
 }

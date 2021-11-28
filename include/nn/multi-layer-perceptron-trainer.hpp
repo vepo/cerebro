@@ -1,6 +1,6 @@
 #pragma once
 #include "dataset/dataset.hpp"
-#include "multi-layer-perceptron.hpp"
+#include "nn/multi-layer-perceptron-trainee.hpp"
 
 class MultiLayerPerceptronTrainerParams
 {
@@ -26,7 +26,7 @@ class MultiLayerPerceptronTrainer
 public:
     explicit MultiLayerPerceptronTrainer(const MultiLayerPerceptronTrainerParams &params);
     void train();
-    static double MSE(MultiLayerPerceptron *mlp,
+    static double MSE(MultiLayerPerceptronTrainee *mlp,
                       const NormalizedDataset &input,
                       const NormalizedDataset &output);
 
