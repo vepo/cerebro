@@ -10,32 +10,32 @@ void VT100::foregroundColor(Color color)
     switch (color)
     {
     case Color::BLACK:
-        std::cout << "\e[30m";
+        std::cout << "\x1b[30m";
         break;
     case Color::RED:
-        std::cout << "\e[31m";
+        std::cout << "\x1b[31m";
         break;
     case Color::GREEN:
-        std::cout << "\e[32m";
+        std::cout << "\x1b[32m";
         break;
     case Color::YELLOW:
-        std::cout << "\e[33m";
+        std::cout << "\x1b[33m";
         break;
     case Color::BLUE:
-        std::cout << "\e[34m";
+        std::cout << "\x1b[34m";
         break;
     case Color::MAGENTA:
-        std::cout << "\e[35m";
+        std::cout << "\x1b[35m";
         break;
     case Color::CYAN:
-        std::cout << "\e[36m";
+        std::cout << "\x1b[36m";
         break;
     case Color::WHITE:
-        std::cout << "\e[37m";
+        std::cout << "\x1b[37m";
         break;
     case Color::DEFAULT:
     default:
-        std::cout << "\e[39m";
+        std::cout << "\x1b[39m";
         break;
     }
 }
@@ -54,8 +54,6 @@ WindowSize VT100::getWindowSize()
 {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    printf("lines %d\n", w.ws_row);
-    printf("columns %d\n", w.ws_col);
     return {.rows = w.ws_row, .cols = w.ws_col};
 }
 
@@ -70,10 +68,10 @@ void VT100::fillLine(char c, size_t times)
 
 void VT100::goTo(Cursor postion)
 {
-    std::cout << "\e[" << postion.y << ";" << postion.x << "H";
+    std::cout << "\x1b[" << postion.y << ";" << postion.x << "H";
 }
 
 void VT100::eraseLine()
 {
-    std::cout << "\e[K";
+    std::cout << "\x1b[K";
 }
