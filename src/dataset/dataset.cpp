@@ -34,12 +34,6 @@ Dataset::Dataset(std::string const &path) : _cols(0), _rows(0)
     }
     _rows = counter - 1;
 }
-Dataset::Dataset(const Dataset &src) : _names(src._names),
-                                       _contents(src._contents),
-                                       _cols(src._cols),
-                                       _rows(src._rows)
-{
-}
 
 Dataset::Dataset(std::vector<std::string> names,
                  std::vector<std::vector<std::string>> contents)

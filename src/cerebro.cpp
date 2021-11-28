@@ -1,6 +1,6 @@
 #include <iostream>
 #include "nn/perceptron.hpp"
-#include "nn/multi-layer-perceptron.hpp"
+#include "nn/multi-layer-perceptron-trainee.hpp"
 
 #define AND_WEIGHTS \
     {               \
@@ -35,7 +35,7 @@ int main()
               << "------------- Hardcoded XOR Example -------------"
               << std::endl
               << std::endl;
-    MultiLayerPerceptron mlp = MultiLayerPerceptron({2, 2, 1});
+    MultiLayerPerceptronTrainee mlp = MultiLayerPerceptronTrainee({2, 2, 1});
     mlp.setWeights({{NAND_WEIGHTS, OR_WEIGHTS}, {AND_WEIGHTS}});
     std::cout << "Hard-coded weights:\n";
     mlp.printWeights();
@@ -52,7 +52,7 @@ int main()
               << std::endl
               << std::endl;
 
-    mlp = MultiLayerPerceptron({2, 2, 1});
+    mlp = MultiLayerPerceptronTrainee({2, 2, 1});
     std::cout << "Training Neural Network as an XOR Gate..." << std::endl;
     double MSE;
     for (int i = 0; i < 3000; ++i)

@@ -72,6 +72,7 @@ clean:
 	-@rm -rvf $(APP_DIR)/*
 	-@rm -rvf $(COV_DIR)
 	-@rm -rvf $(TEST_REPORT)
+	-@rm -rfv main_coverage.info *.exe report
 	-@find . -name '*.gcov'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcno'      -exec rm -rv -- '{}' +
 	-@find . -name '*.gcda'      -exec rm -rv -- '{}' +

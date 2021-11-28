@@ -10,7 +10,7 @@ class Dataset
 {
 public:
     explicit Dataset(std::string const &path);
-    Dataset(const Dataset &src);
+    Dataset(const Dataset &src) = default;
     std::string cell(int row, int col);
     std::string cell(int row, const std::string &colName);
 
