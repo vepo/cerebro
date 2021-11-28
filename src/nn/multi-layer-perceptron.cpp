@@ -10,7 +10,7 @@ MultiLayerPerceptron::MultiLayerPerceptron(std::vector<std::vector<std::vector<d
         network.emplace_back();
         for (int j = 0; j < weights[i].size(); ++j)
         {
-            network[i ].emplace_back(Perceptron(weights[i][j], bias));
+            network[i].emplace_back(Perceptron(weights[i][j], Function::SIGMOID, bias));
         }
     }
 }

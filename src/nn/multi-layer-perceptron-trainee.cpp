@@ -28,7 +28,7 @@ MultiLayerPerceptronTrainee::MultiLayerPerceptronTrainee(std::vector<int> layers
                 {
                     droppedValues[i - 1].emplace_back(false);
                 }
-                network[i].emplace_back(Perceptron(layers[i - 1], bias));
+                network[i].emplace_back(Perceptron(layers[i - 1], Function::SIGMOID, bias));
             }
         }
     }
