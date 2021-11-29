@@ -46,8 +46,9 @@ void print_vector(std::string paramName, std::vector<T> v)
 }
 
 #include <limits>
+#include <cmath>
 
-void MultiLayerPerceptronTrainer::train()
+Model MultiLayerPerceptronTrainer::train()
 {
     Pair<Dataset> trainPair = params.dataset.split(params.testSize + params.validationSize);
     Pair<Dataset> validationPair = trainPair.first.split(params.validationSize / (params.testSize + params.validationSize));
@@ -124,6 +125,12 @@ void MultiLayerPerceptronTrainer::train()
             std::cout << std::endl;
             lastTestError = testError;
         }
+
+        if (std::isnan(MSE) || std::isnan(lastTestError))
+        {
+            mlp = MultiLayerPerceptronTrainee(params.layers);
+            epoch = -1;
+        }
     }
 
     mlp.setWeights(minWeights);
@@ -136,6 +143,7 @@ void MultiLayerPerceptronTrainer::train()
               << std::endl
               << std::endl;
     mlp.printWeights();
+    return Model("", params.xNames, params.yNames, minWeights, mlp.bias());
 }
 
 double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptronTrainee *mlp,
@@ -151,9 +159,19 @@ double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptronTrainee *mlp,
         for (size_t j = 0; j < result.size(); ++j)
         {
             double delta = result[j] - expectedResult[j];
+            std::cout << "result  : [" << row << "][" << j << "]" << result[j] << std::endl;
+            std::cout << "expected: [" << row << "][" << j << "]" << expectedResult[j] << std::endl;
+            std::cout << "delta   : [" << row << "][" << j << "]" << delta << std::endl;
             localError += delta * delta;
         }
         MSE += localError;
+    }
+    if (std::isnan(MSE / input.rows()))
+    {
+        std::cout << "MSE: " << MSE << std::endl;
+        std::cout << "ROWS: " << input.rows() << std::endl;
+        mlp->printWeights();
+        exit(-1);
     }
     return MSE / input.rows();
 }

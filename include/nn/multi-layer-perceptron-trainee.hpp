@@ -19,15 +19,16 @@ public:
     double bp(std::vector<double> x, std::vector<double> y);
     void generateDropout();
     void disableDropout();
+    double bias() const { return _bias; };
 
 private:
-    std::vector<int> layers;
-    double bias;
-    double learning_rate;
-    double momentum;
-    double dropout;
-    std::vector<std::vector<Perceptron>> network;
-    std::vector<std::vector<double>> values;
-    std::vector<std::vector<bool>> droppedValues;
-    std::vector<std::vector<double>> network_error;
+    std::vector<int> _layers;
+    double _bias;
+    double _learning_rate;
+    double _momentum;
+    double _dropout;
+    std::vector<std::vector<Perceptron>> _network;
+    std::vector<std::vector<double>> _values;
+    std::vector<std::vector<bool>> _droppedValues;
+    std::vector<std::vector<double>> _network_error;
 };

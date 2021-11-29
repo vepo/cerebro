@@ -12,5 +12,5 @@ TEST_CASE("MultiLayerPerceptron Trainer")
                                              std::vector<int>({9, 9, 3, 1}),
                                              5000);
     MultiLayerPerceptronTrainer trainer(params);
-    trainer.train();
+    Model model = trainer.train();
 }
