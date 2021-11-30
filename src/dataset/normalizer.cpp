@@ -64,8 +64,8 @@ NormalizeRule Normalizer::inferRule(const std::vector<std::string> &data)
     if (supposedType == DataType::INTEGER || supposedType == DataType::FLOATING_POINT)
     {
 
-        double min = std::numeric_limits<double>::max(),
-               max = std::numeric_limits<double>::min();
+        double min = std::numeric_limits<double>::max();
+        double max = std::numeric_limits<double>::min();
 
         for (int row = 0; row < data.size(); ++row)
         {
@@ -115,63 +115,84 @@ double Normalizer::normalize(const NormalizeRule &rule, const std::string &value
     {
     case DataType::INTEGER:
     {
-        if (rule.max != rule.min)
-        {
-            return ((double)std::stoi(value) - rule.min) / (rule.max - rule.min);
-        }
-        else
-        {
-            return 0.0;
-        }
+
+        return normalizeFloatPoint(value, rule.min, rule.max);
     };
     case DataType::FLOATING_POINT:
     {
-        if (rule.max != rule.min)
-        {
-            return (std::stod(value) - rule.min) / (rule.max - rule.min);
-        }
-        else
-        {
-            return 0.0;
-        }
+        return normalizeFloatPoint(value, rule.min, rule.max);
     };
     case DataType::ENUM:
     {
-        auto index = std::find(rule.values.begin(), rule.values.end(), value);
-        if (rule.values.size() > 0 && index != rule.values.end())
-        {
-            return ((double)(index - rule.values.begin() + 1)) / ((double)rule.values.size());
-        }
-        else
-        {
-            return 0.0;
-        }
+        return normalizeEnum(value, rule.values);
     }
     case DataType::BOOLEAN:
-    {
-        if (std::find(TRUE_VALUES.begin(), TRUE_VALUES.end(), value) != TRUE_VALUES.end())
-        {
-            return 1.0;
-        }
-        else if (std::find(FALSE_VALUES.begin(), FALSE_VALUES.end(), value) != FALSE_VALUES.end())
-        {
-            return 0.5;
-        }
-        else if (rule.values.size() == 2 && rule.values[0] == value)
-        {
-            return 1.0;
-        }
-        else if (rule.values.size() == 2 && rule.values[1] == value)
-        {
-            return 0.5;
-        }
-        else
-        {
-            return 0.0;
-        }
-    }
-    case DataType::UNDEFINED:
+        return normalizeBoolean(value, rule.values);
     default:
+        return 0.0;
+    }
+}
+double Normalizer::normalizeInteger(const std::string &value,
+                                    int min, int max)
+{
+    if (max != min)
+    {
+        return ((double)std::stoi(value) - min) / (max - min);
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+double Normalizer::normalizeFloatPoint(const std::string &value,
+                                       double min, double max)
+{
+    if (max != min)
+    {
+        return (std::stod(value) - min) / (max - min);
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+double Normalizer::normalizeEnum(const std::string &value,
+                                 const std::vector<std::string> &values)
+{
+    auto index = std::find(values.begin(), values.end(), value);
+    if (values.size() > 0 && index != values.end())
+    {
+        return ((double)(index - values.begin() + 1)) / ((double)values.size());
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+double Normalizer::normalizeBoolean(const std::string &value,
+                                    const std::vector<std::string> &values)
+{
+    if (std::find(TRUE_VALUES.begin(), TRUE_VALUES.end(), value) != TRUE_VALUES.end())
+    {
+        return 1.0;
+    }
+    else if (std::find(FALSE_VALUES.begin(), FALSE_VALUES.end(), value) != FALSE_VALUES.end())
+    {
+        return 0.5;
+    }
+    else if (values.size() == 2 && values[0] == value)
+    {
+        return 1.0;
+    }
+    else if (values.size() == 2 && values[1] == value)
+    {
+        return 0.5;
+    }
+    else
+    {
         return 0.0;
     }
 }
