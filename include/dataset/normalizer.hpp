@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include <set>
 
 enum class DataType
 {
@@ -24,8 +25,10 @@ struct NormalizeRule
 class Normalizer
 {
 public:
-    static NormalizeRule inferRule(std::vector<std::string> data);
+    static NormalizeRule inferRule(const std::vector<std::string> &data);
     static double normalize(const NormalizeRule &rule, const std::string &value);
+    static DataType inferType(const std::vector<std::string> &data,
+                              std::set<std::string> *uniqueValues = NULL);
 
 private:
     static std::vector<std::string> TRUE_VALUES;

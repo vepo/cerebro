@@ -1,7 +1,5 @@
 #include "dataset/normalizer.hpp"
 
-#include <set>
-
 std::regex Normalizer::INTEGER_PATTERN("\\s*-?\\s*[0-9]+\\s*");
 std::regex Normalizer::FLOATING_POINT_PATTERN("\\s*-?\\s*[0-9]*\\.[0-9]*\\s*");
 std::regex Normalizer::ENUM_PATTERN("\\s*[A-Za-z0-9\\s]+\\s*");
@@ -9,15 +7,21 @@ std::regex Normalizer::ENUM_PATTERN("\\s*[A-Za-z0-9\\s]+\\s*");
 std::vector<std::string> Normalizer::TRUE_VALUES = {"t", "true", "s", "sim"};
 std::vector<std::string> Normalizer::FALSE_VALUES = {"f", "false", "n", "não", "nao"};
 
-NormalizeRule Normalizer::inferRule(std::vector<std::string> data)
+DataType Normalizer::inferType(const std::vector<std::string> &data,
+                               std::set<std::string> *uniqueValues)
 {
+    bool localSet = NULL == uniqueValues;
+    if (localSet)
+    {
+        uniqueValues = new std::set<std::string>();
+    }
+
     DataType supposedType = DataType::INTEGER;
-    std::set<std::string> uniqueValues;
     for (int row = 0; row < data.size(); row++)
     {
         if (data[row].size() > 0)
         {
-            uniqueValues.insert(data[row]);
+            uniqueValues->insert(data[row]);
             if (supposedType == DataType::INTEGER &&
                 regex_match(data[row], INTEGER_PATTERN))
             {
@@ -40,11 +44,23 @@ NormalizeRule Normalizer::inferRule(std::vector<std::string> data)
             }
         }
     }
-    if (supposedType == DataType::ENUM && uniqueValues.size() <= 2)
+    if (supposedType == DataType::ENUM && uniqueValues->size() <= 2)
     {
         supposedType = DataType::BOOLEAN;
     }
 
+    if (localSet)
+    {
+        delete uniqueValues;
+    }
+
+    return supposedType;
+}
+
+NormalizeRule Normalizer::inferRule(const std::vector<std::string> &data)
+{
+    std::set<std::string> uniqueValues;
+    DataType supposedType = inferType(data, &uniqueValues);
     if (supposedType == DataType::INTEGER || supposedType == DataType::FLOATING_POINT)
     {
 

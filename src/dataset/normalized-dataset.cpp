@@ -58,16 +58,3 @@ std::vector<double> NormalizedDataset::rowData(int row) const
 {
     return _contents[row];
 }
-
-//void NormalizedDataset::printValues()
-//{
-//    for (int row = 0; row < _contents.size(); ++row)
-//    {
-//
-//        for (int col = 0; col < _contents[row].size(); ++col)
-//        {
-//            std::cout << std::setw(10) << std::setprecision(5) << _contents[row][col] << "    ";
-//        }
-//        std::cout << std::endl;
-//    }
-//}

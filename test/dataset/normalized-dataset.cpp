@@ -23,8 +23,6 @@ TEST_CASE("Reading dataset")
     REQUIRE_EQ(dataset.type("CLASS"), DataType::ENUM);
     REQUIRE_EQ(dataset.type("GRADE"), DataType::FLOATING_POINT);
 
-    //nd.printValues();
-
     // ID
     REQUIRE_EQ(nd.cell(0, 0), 0.0);
     REQUIRE_EQ(nd.cell(1, 0), 0.2);

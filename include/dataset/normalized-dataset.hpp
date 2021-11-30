@@ -15,7 +15,6 @@ public:
     double cell(int row, const std::string &colName);
     std::vector<double> rowData(int row) const;
     int rows() const { return this->_contents.size(); };
-    //void printValues();
 
 private:
     int colIndex(const std::string &colName);
