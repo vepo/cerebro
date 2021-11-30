@@ -25,8 +25,7 @@ Perceptron::Perceptron(std::vector<double> weights,
 double Perceptron::run(std::vector<double> x)
 {
     x.push_back(bias);
-    double sum = std::inner_product(x.begin(), x.end(), weights.begin(), (double)0.0);
-    return (*fn)(sum);
+    return (*fn)(std::inner_product(x.begin(), x.end(), weights.begin(), (double)0.0));
 }
 
 void Perceptron::setWeights(std::vector<double> w_init)

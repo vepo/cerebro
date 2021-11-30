@@ -6,7 +6,13 @@ This project uses Make. It can be build using MSYS or any Linux system.
 
 - make 
 - g++ 
-- lcov
+- unzip
+
+Installing it on MSYS2:
+
+```bash
+pacman -S make gcc unzip
+```
 
 ## Executing tests
 

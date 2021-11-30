@@ -6,6 +6,8 @@
 #include "utils/csv-reader.hpp"
 #include "utils/random.hpp"
 
+#include <iostream>
+
 Dataset::Dataset(std::string const &path) : _cols(0), _rows(0)
 {
     CSVReader reader(path);
@@ -33,14 +35,23 @@ Dataset::Dataset(std::string const &path) : _cols(0), _rows(0)
         }
     }
     _rows = counter - 1;
+    for (size_t col = 0; col < _names.size(); ++col)
+    {
+        NormalizeRule rule = Normalizer::inferRule(rowData(col));
+        if (rule.type != DataType::UNDEFINED)
+        {
+            this->_rules[_names[col]] = rule;
+        }
+    }
 }
 
-Dataset::Dataset(std::vector<std::string> names,
-                 std::vector<std::vector<std::string>> contents)
-    : _names(names),
-      _contents(contents),
-      _cols(names.size()),
-      _rows(contents.size())
+Dataset::Dataset(const std::vector<std::string> &names,
+                 const std::vector<std::vector<std::string>> &contents,
+                 const std::map<std::string, NormalizeRule> &rules) : _names(names),
+                                                                      _contents(contents),
+                                                                      _cols(names.size()),
+                                                                      _rows(contents.size()),
+                                                                      _rules(rules)
 {
 }
 
@@ -97,6 +108,7 @@ Dataset Dataset::split(const std::vector<int> &colums) const
     { splitedContents.emplace_back(); };
     std::for_each(_contents.cbegin(), _contents.cend(), initialize_row);
 
+    std::map<std::string, NormalizeRule> rules;
     for (const auto &index : colums)
     {
         splitedColumnNames.emplace_back(_names[index]);
@@ -104,8 +116,14 @@ Dataset Dataset::split(const std::vector<int> &colums) const
         {
             splitedContents[row].emplace_back(_contents[row][index]);
         }
+
+        if (_rules.find(_names[index]) != _rules.end())
+        {
+            rules[_names[index]] = _rules.at(_names[index]);
+        }
     }
-    return Dataset(splitedColumnNames, splitedContents);
+
+    return Dataset(splitedColumnNames, splitedContents, rules);
 }
 
 Pair<Dataset> Dataset::split(double ratio) const
@@ -134,11 +152,65 @@ Pair<Dataset> Dataset::split(double ratio) const
         }
     }
 
-    return Pair<Dataset>(Dataset(_names, firstContents),
-                         Dataset(_names, secondContents));
+    return Pair<Dataset>(Dataset(_names, firstContents, _rules),
+                         Dataset(_names, secondContents, _rules));
 }
 
 NormalizedDataset Dataset::normalize() const
 {
-    return NormalizedDataset(_names, _contents);
+    std::vector<std::vector<double>> normalizedContents;
+
+    for (size_t row = 0; row < _contents.size(); ++row)
+    {
+        normalizedContents.emplace_back();
+        for (size_t col = 0; col < _contents[row].size(); ++col)
+        {
+            std::string colName = _names[col];
+            if (_rules.find(colName) != _rules.end())
+            {
+                NormalizeRule rule = _rules.at(colName);
+                normalizedContents[row].emplace_back(Normalizer::normalize(rule, _contents[row][col]));
+            }
+        }
+    }
+    return NormalizedDataset(_names, normalizedContents);
+}
+
+DataType Dataset::type(int col)
+{
+    return type(_names[col]);
+}
+
+DataType Dataset::type(const std::string &colName)
+{
+    if (_rules.find(colName) != _rules.end())
+    {
+        return _rules.at(colName).type;
+    }
+    else
+    {
+        return DataType::UNDEFINED;
+    }
+}
+std::vector<std::string> Dataset::rowData(const std::string &colName) const
+{
+    int index = this->colIndex(colName);
+    if (index >= 0)
+    {
+        return rowData(index);
+    }
+    else
+    {
+        return {};
+    }
+}
+
+std::vector<std::string> Dataset::rowData(int row) const
+{
+    std::vector<std::string> data;
+    for (size_t col = 0; col < _contents.size(); ++col)
+    {
+        data.emplace_back(_contents[col][row]);
+    }
+    return data;
 }

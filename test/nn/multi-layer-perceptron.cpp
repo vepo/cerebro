@@ -14,7 +14,6 @@
     }
 
 #include "nn/multi-layer-perceptron.hpp"
-#include <iostream>
 
 TEST_CASE("MultiLayerPerceptron")
 {
@@ -22,9 +21,9 @@ TEST_CASE("MultiLayerPerceptron")
     {
         MultiLayerPerceptron xorPerceptron({{NAND_WEIGHTS, OR_WEIGHTS}, {AND_WEIGHTS}});
 
-        CHECK_EQ(doctest::Approx(xorPerceptron.run({0, 0})[0]).epsilon(0.1), 0.0);
-        CHECK_EQ(doctest::Approx(xorPerceptron.run({0, 1})[0]).epsilon(0.1), 1.0);
-        CHECK_EQ(doctest::Approx(xorPerceptron.run({1, 0})[0]).epsilon(0.1), 1.0);
-        CHECK_EQ(doctest::Approx(xorPerceptron.run({1, 1})[0]).epsilon(0.1), 0.0);
+        REQUIRE_EQ(doctest::Approx(xorPerceptron.run({0, 0})[0]).epsilon(0.1), 0.0);
+        REQUIRE_EQ(doctest::Approx(xorPerceptron.run({0, 1})[0]).epsilon(0.1), 1.0);
+        REQUIRE_EQ(doctest::Approx(xorPerceptron.run({1, 0})[0]).epsilon(0.1), 1.0);
+        REQUIRE_EQ(doctest::Approx(xorPerceptron.run({1, 1})[0]).epsilon(0.1), 0.0);
     }
 }

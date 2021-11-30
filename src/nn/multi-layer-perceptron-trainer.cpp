@@ -2,6 +2,7 @@
 #include "nn/multi-layer-perceptron-trainee.hpp"
 #include <iostream>
 #include <iomanip>
+#include <limits>
 #include "utils/vt100.hpp"
 
 MultiLayerPerceptronTrainerParams::MultiLayerPerceptronTrainerParams(const Dataset &dataset,
@@ -44,9 +45,6 @@ void print_vector(std::string paramName, std::vector<T> v)
     }
     std::cout << "}" << std::endl;
 }
-
-#include <limits>
-#include <cmath>
 
 Model MultiLayerPerceptronTrainer::train()
 {
@@ -125,12 +123,6 @@ Model MultiLayerPerceptronTrainer::train()
             std::cout << std::endl;
             lastTestError = testError;
         }
-
-        if (std::isnan(MSE) || std::isnan(lastTestError))
-        {
-            mlp = MultiLayerPerceptronTrainee(params.layers);
-            epoch = -1;
-        }
     }
 
     mlp.setWeights(minWeights);
@@ -159,19 +151,9 @@ double MultiLayerPerceptronTrainer::MSE(MultiLayerPerceptronTrainee *mlp,
         for (size_t j = 0; j < result.size(); ++j)
         {
             double delta = result[j] - expectedResult[j];
-            std::cout << "result  : [" << row << "][" << j << "]" << result[j] << std::endl;
-            std::cout << "expected: [" << row << "][" << j << "]" << expectedResult[j] << std::endl;
-            std::cout << "delta   : [" << row << "][" << j << "]" << delta << std::endl;
             localError += delta * delta;
         }
         MSE += localError;
-    }
-    if (std::isnan(MSE / input.rows()))
-    {
-        std::cout << "MSE: " << MSE << std::endl;
-        std::cout << "ROWS: " << input.rows() << std::endl;
-        mlp->printWeights();
-        exit(-1);
     }
     return MSE / input.rows();
 }
