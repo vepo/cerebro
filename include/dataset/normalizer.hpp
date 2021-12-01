@@ -28,7 +28,7 @@ public:
     static NormalizeRule inferRule(const std::vector<std::string> &data);
     static double normalize(const NormalizeRule &rule, const std::string &value);
     static DataType inferType(const std::vector<std::string> &data,
-                              std::set<std::string> *uniqueValues = NULL);
+                              std::set<std::string> *uniqueValues = nullptr);
     static double normalizeBoolean(const std::string &value,
                                    const std::vector<std::string> &values);
     static double normalizeEnum(const std::string &value,

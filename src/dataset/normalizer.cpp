@@ -10,7 +10,7 @@ std::vector<std::string> Normalizer::FALSE_VALUES = {"f", "false", "n", "não", 
 DataType Normalizer::inferType(const std::vector<std::string> &data,
                                std::set<std::string> *uniqueValues)
 {
-    bool localSet = NULL == uniqueValues;
+    bool localSet = nullptr == uniqueValues;
     if (localSet)
     {
         uniqueValues = new std::set<std::string>();

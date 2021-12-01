@@ -72,7 +72,7 @@ Model MultiLayerPerceptronTrainer::train()
     print_valuee("Epocs                  ", params.epochs);
     std::cout << std::endl;
     VT100::fillLine('-', size.cols);
-    MultiLayerPerceptronTrainee mlp = MultiLayerPerceptronTrainee(params.layers);
+    auto mlp = MultiLayerPerceptronTrainee(params.layers);
     NormalizedDataset trainInput = trainDataset.split(params.xNames).normalize();
     NormalizedDataset trainOutput = trainDataset.split(params.yNames).normalize();
 

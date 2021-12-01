@@ -1,30 +1,37 @@
 #pragma once
 
-#include <string>
 #include <vector>
+#include <string>
+
+enum class OptionType
+{
+    INTEGER = 1,
+    INTEGER_LIST = 2,
+    STRING = 3,
+    STRING_LIST = 4
+};
+
+struct ParamOption
+{
+    std::string longOpt;
+    std::string shortOpt;
+    OptionType type;
+    void *dest;
+};
+
+struct TrainerParameters
+{
+    std::string outpuFile;
+    std::string datasetFile;
+    std::vector<std::string> inputNames;
+    std::vector<std::string> outputNames;
+    std::vector<int> layers;
+    int epochs;
+};
 
 class Parameters
 {
 public:
-    static Parameters parse(std::vector<std::string> argv);
-    const std::string &outpuFile() { return _outpuFile; };
-    const std::string &datasetFile() { return _datasetFile; };
-    const std::vector<std::string> &inputNames() { return _inputNames; };
-    const std::vector<std::string> &outputNames() { return _outputNames; };
-    const std::vector<int> &layers() { return _layers; };
-    const int epochs() { return _epochs; };
-
-private:
-    Parameters(const std::string &outpuFile,
-               const std::string &datasetFile,
-               const std::vector<std::string> &inputNames,
-               const std::vector<std::string> &outputNames,
-               const std::vector<int> &layers,
-               int epochs);
-    std::string _outpuFile;
-    std::string _datasetFile;
-    std::vector<std::string> _inputNames;
-    std::vector<std::string> _outputNames;
-    std::vector<int> _layers;
-    int _epochs;
+    static void parse(std::vector<std::string> argv,
+                      const std::vector<ParamOption> &options);
 };

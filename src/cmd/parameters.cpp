@@ -3,7 +3,8 @@
 #include <iostream>
 #include <sstream>
 
-Parameters Parameters::parse(std::vector<std::string> argv)
+void Parameters::parse(std::vector<std::string> argv,
+                       const std::vector<ParamOption> &options)
 {
     std::string outpuFile;
     std::string datasetFile;
@@ -13,78 +14,56 @@ Parameters Parameters::parse(std::vector<std::string> argv)
     int epochs = -1;
     for (size_t index = 0; index < argv.size(); ++index)
     {
-        if ((argv[index] == "-o" || argv[index] == "--output-file") &&
-            index + 1 < argv.size())
+        bool processed = false;
+        for (const auto &opt : options)
         {
-            outpuFile = argv[index + 1];
-            index++;
-        }
-        else if ((argv[index] == "-d" || argv[index] == "--dataset") &&
-                 index + 1 < argv.size())
-        {
-            datasetFile = argv[index + 1];
-            ++index;
-        }
-        else if ((argv[index] == "-in" || argv[index] == "--input") &&
-                 index + 1 < argv.size())
-        {
-            std::istringstream sstream(argv[index + 1]);
-            for (std::string key; std::getline(sstream, key, ',');)
+            if (!processed)
             {
-                inputNames.push_back(key);
+                if (opt.type == OptionType::STRING &&
+                    (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
+                    index + 1 < argv.size())
+                {
+                    *((std::string *)opt.dest) = argv[index + 1];
+                    ++index;
+                    processed = true;
+                }
+                else if (opt.type == OptionType::STRING_LIST &&
+                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
+                         index + 1 < argv.size())
+                {
+                    std::istringstream sstream(argv[index + 1]);
+                    for (std::string key; std::getline(sstream, key, ',');)
+                    {
+                        ((std::vector<std::string> *)opt.dest)->push_back(key);
+                    }
+                    ++index;
+                    processed = true;
+                }
+                else if (opt.type == OptionType::INTEGER_LIST &&
+                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
+                         index + 1 < argv.size())
+                {
+                    std::istringstream sstream(argv[index + 1]);
+                    for (std::string layerSize; std::getline(sstream, layerSize, ',');)
+                    {
+                        ((std::vector<int> *)opt.dest)->push_back(std::stoi(layerSize));
+                    }
+                    ++index;
+                    processed = true;
+                }
+                else if (opt.type == OptionType::INTEGER &&
+                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
+                         index + 1 < argv.size())
+                {
+                    *((int *)opt.dest) = std::stoi(argv[index + 1]);
+                    ++index;
+                    processed = true;
+                }
             }
-            ++index;
         }
-        else if ((argv[index] == "-out" || argv[index] == "--output") &&
-                 index + 1 < argv.size())
-        {
-            std::istringstream sstream(argv[index + 1]);
-            for (std::string key; std::getline(sstream, key, ',');)
-            {
-                outputNames.push_back(key);
-            }
-            ++index;
-        }
-        else if ((argv[index] == "-l" || argv[index] == "--layers") &&
-                 index + 1 < argv.size())
-        {
-            std::istringstream sstream(argv[index + 1]);
-            for (std::string layerSize; std::getline(sstream, layerSize, ',');)
-            {
-                layers.push_back(std::stoi(layerSize));
-            }
-            ++index;
-        }
-        else if ((argv[index] == "-e" || argv[index] == "--epochs") &&
-                 index + 1 < argv.size())
-        {
-            epochs = std::stoi(argv[index + 1]);
-            ++index;
-        }
-        else
+        if (!processed)
         {
             std::cerr << "Unknown parameter: " << argv[index] << std::endl;
         }
     }
-
-    return Parameters(outpuFile,
-                      datasetFile,
-                      inputNames,
-                      outputNames,
-                      layers,
-                      epochs);
-}
-
-Parameters::Parameters(const std::string &outpuFile,
-                       const std::string &datasetFile,
-                       const std::vector<std::string> &inputNames,
-                       const std::vector<std::string> &outputNames,
-                       const std::vector<int> &layers,
-                       int epochs) : _outpuFile(outpuFile),
-                                     _datasetFile(datasetFile),
-                                     _inputNames(inputNames),
-                                     _outputNames(outputNames),
-                                     _layers(layers),
-                                     _epochs(epochs)
-{
 }
