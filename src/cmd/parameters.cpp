@@ -3,65 +3,69 @@
 #include <iostream>
 #include <sstream>
 
+const ParamOption *findOption(const std::string &name,
+                              const std::vector<ParamOption> &options)
+{
+    for (const auto &opt : options)
+    {
+        if (opt.shortOpt == name || opt.longOpt == name)
+        {
+            return &opt;
+        }
+    }
+    return nullptr;
+}
+
 void Parameters::parse(std::vector<std::string> argv,
                        const std::vector<ParamOption> &options)
 {
-    std::string outpuFile;
-    std::string datasetFile;
-    std::vector<std::string> inputNames;
-    std::vector<std::string> outputNames;
-    std::vector<int> layers;
-    int epochs = -1;
     for (size_t index = 0; index < argv.size(); ++index)
     {
-        bool processed = false;
-        for (const auto &opt : options)
+        const ParamOption *opt = findOption(argv[index], options);
+        if (nullptr != opt)
         {
-            if (!processed)
+            if (index + 1 < argv.size())
             {
-                if (opt.type == OptionType::STRING &&
-                    (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
-                    index + 1 < argv.size())
+                switch (opt->type)
                 {
-                    *((std::string *)opt.dest) = argv[index + 1];
-                    ++index;
-                    processed = true;
-                }
-                else if (opt.type == OptionType::STRING_LIST &&
-                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
-                         index + 1 < argv.size())
+                case OptionType::INTEGER:
                 {
-                    std::istringstream sstream(argv[index + 1]);
-                    for (std::string key; std::getline(sstream, key, ',');)
-                    {
-                        ((std::vector<std::string> *)opt.dest)->push_back(key);
-                    }
+                    *((int *)opt->dest) = std::stoi(argv[index + 1]);
                     ++index;
-                    processed = true;
                 }
-                else if (opt.type == OptionType::INTEGER_LIST &&
-                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
-                         index + 1 < argv.size())
+                break;
+                case OptionType::INTEGER_LIST:
                 {
                     std::istringstream sstream(argv[index + 1]);
                     for (std::string layerSize; std::getline(sstream, layerSize, ',');)
                     {
-                        ((std::vector<int> *)opt.dest)->push_back(std::stoi(layerSize));
+                        ((std::vector<int> *)opt->dest)->push_back(std::stoi(layerSize));
                     }
                     ++index;
-                    processed = true;
                 }
-                else if (opt.type == OptionType::INTEGER &&
-                         (argv[index] == opt.shortOpt || argv[index] == opt.longOpt) &&
-                         index + 1 < argv.size())
+                break;
+                case OptionType::STRING:
                 {
-                    *((int *)opt.dest) = std::stoi(argv[index + 1]);
+                    *((std::string *)opt->dest) = argv[index + 1];
                     ++index;
-                    processed = true;
+                }
+                break;
+                case OptionType::STRING_LIST:
+                {
+                    std::istringstream sstream(argv[index + 1]);
+                    for (std::string key; std::getline(sstream, key, ',');)
+                    {
+                        ((std::vector<std::string> *)opt->dest)->push_back(key);
+                    }
+                    ++index;
+                }
+                break;
+                default:
+                    break;
                 }
             }
         }
-        if (!processed)
+        else
         {
             std::cerr << "Unknown parameter: " << argv[index] << std::endl;
         }
