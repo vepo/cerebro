@@ -13,4 +13,5 @@ TEST_CASE("MultiLayerPerceptron Trainer")
                                              5000);
     MultiLayerPerceptronTrainer trainer(params);
     Model model = trainer.train();
+    model.save("./output/models/forestfires.csv");
 }

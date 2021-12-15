@@ -11,6 +11,10 @@ public:
           std::vector<std::string> outputs,
           std::vector<std::vector<std::vector<double>>> weights,
           double bias);
+    bool save(const std::string &path);
+    const std::string name() { return _name; };
+    const std::vector<std::string> inputs() { return _inputs; };
+    const std::vector<std::string> outputs() { return _outputs; };
 
 private:
     std::string _name;

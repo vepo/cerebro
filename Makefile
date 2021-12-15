@@ -54,9 +54,14 @@ $(DOCTEST_DIR):
 	unzip $(BUILD)/doctest.zip -d $(BUILD)
 	@mv $(DOCTEST_DIR)-$(DOCTEST_VERSION) $(DOCTEST_DIR)
 
-test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
+build-test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
 	$(CXX) $(CXXFLAGS) $(DOCTEST_INCLUDE) $(INCLUDE) $(TESTS) $(OBJECTS) -o $(BUILD)/tests $(LDFLAGS)
-	$(BUILD)/tests ## --out=$(TEST_REPORT) --reporters=junit
+
+test: $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
+	$(BUILD)/tests
+
+test-%: build-test $(TESTS) $(OBJECTS) $(DOCTEST_DIR)
+	$(BUILD)/tests --test-case=*$**
 
 clean-doctest:
 	-@rm -rvf $(DOCTEST_DIR)
